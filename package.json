@@ -40,15 +40,16 @@
     "ass": "0.0.4"
   },
   "jshintConfig": {
+      "curly": true,
+      "eqeqeq": true,
+      "indent": 4,
       "asi": true,
       "boss": true,
       "browser": true,
-      "curly": true,
       "devel": true,
       "maxdepth": 4,
       "maxstatements": 25,
       "maxcomplexity": 6,
-      "eqeqeq": true,
       "eqnull": true,
       "es5": true,
       "evil": false,
@@ -66,7 +67,7 @@
       ],
       "quotmark": "double",
       "smarttabs": true,
-      "strict": false,
+      "strict": true,
       "trailing": false,
       "undef": true,
       "unused": true

@@ -26,16 +26,15 @@ CREATE TABLE users (
     user_sess_id INT UNSIGNED NULL,
     user_created_at Datetime NOT NULL,
     user_updated_at Datetime NULL,
-    PRIMARY KEY ( user_id ),
-    FOREIGN KEY (user_tag_id)
+    PRIMARY KEY ( user_id )
+) ENGINE=INNODB;
+
+ALTER TABLE users ADD FOREIGN KEY (user_sess_id)
+      REFERENCES sessions(sess_id)
+      ON UPDATE CASCADE
+      ON DELETE SET NULL;
+
+ALTER TABLE users ADD FOREIGN KEY (user_tag_id)
       REFERENCES tags(tag_id)
       ON UPDATE CASCADE
       ON DELETE SET NULL,
-    FOREIGN KEY (user_sess_id)
-      REFERENCES sessions(sess_id)
-      ON UPDATE CASCADE
-      ON DELETE SET NULL
-
-) ENGINE=INNODB;
-
-

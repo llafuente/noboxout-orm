@@ -86,6 +86,9 @@
         t.equal(User.$table.structure["tag_id"].$dbtype, "integer", "fk is an integer");
         t.equal(User.prototype.main_tag !== undefined, true, "fk is an integer");
 
+        console.log(User.$createTable());
+process.exit();
+
         t.end();
     });
 
