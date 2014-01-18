@@ -8,17 +8,20 @@
         tap = require("tap"),
         test = tap.test,
         Tag,
-        User;
+        User,
+        Models;
 
     var dba = new DBA();
     norm.setDBA(dba);
 
-    test("truncate database", function (t) {
-        dba.deleteAll("tags", function() {
-            dba.truncate("users", function() {
-                t.end();
+    test("drop tables", function (t) {
+        dba.dropTable("users", function() {
+            dba.dropTable("tags", function() {
+                dba.dropTable("session", function() {
+                    t.end();
+                });
             });
-        }, true);
+        });
     });
 
     test("invalid model", function (t) {
@@ -34,68 +37,18 @@
 
     });
 
-    test("define permission model", function (t) {
-        Tag = norm.define("Tag", {
-            id: norm.Number.LENGTH(10).ZEROFILL.UNSIGNED,
-            name: norm.String.LENGTH(255),
-            initialize: function () {
-                this.__parent();
-            }
-        }, {
-            prefix: "tag_",
-            tableName: "tags"
-        });
-
-        t.ok(norm.models.tags !== undefined);
-        t.equal(Tag.$table.fields.length, 4); // create_at + updated_at
-
-        t.end();
-    });
-
-    test("define user model", function (t) {
-        User = norm.define("User", {
-            dirty: false,
-
-            id: norm.Number.LENGTH(10).ZEROFILL.UNSIGNED,
-            login: norm.String.LENGTH(255),
-            email: norm.String.LENGTH(255),
-            initialize: function () {
-                this.__parent();
-            }
-        }, {
-            prefix: "user_",
-            tableName: "users"
-        });
-
-        t.ok(norm.models.users !== undefined);
-        t.equal(User.$table.fields.length, 5); // create_at + updated_at
-
-        t.end();
-    });
+    Models = require("./test-models.js")(test);
 
     test("norm hasOne", function (t) {
-        // One directional OneToOne
-        //Norm.OneToOne(User, "permission", "user_perm_id", Permission, null);
-        // Bi-directional directional OneToOne
-        //Norm.OneToOne(User, "permission", "user_perm_id", Permission, "owner");
-        //User.hasOne(Permission, /*as*/ "permission", /*in*/ "user_perm_id", {bidirectional: });
-
-        User.$hasOne(Tag, {property: "main_tag", canBeNull: true});
-
-        t.equal(User.$table.fields.indexOf("tag_id") !== -1, true, "has user_perm_id field");
-        t.equal(User.$table.structure["tag_id"].$dbtype, "integer", "fk is an integer");
-        t.equal(User.prototype.main_tag !== undefined, true, "fk is an integer");
-
-        console.log(User.$createTable());
-process.exit();
-
-        t.end();
+        Models.createAll(dba, function() {
+            t.end();
+        });
     });
 
 
     test("create tag", function (t) {
 
-        var p = new Tag();
+        var p = new Models.Tag();
         p.name = "king";
 
         t.ok(p.id === null, "pk is null before save");
@@ -115,7 +68,7 @@ process.exit();
         //console.log(util.inspect(Permission, {depth: 5, colors: true}));
         //console.log(util.inspect(User, {depth: 5, colors: true}));
 
-        var admin = new User();
+        var admin = new Models.User();
         admin.login = "admin";
         admin.email = "admin@admin.com";
 
@@ -128,11 +81,11 @@ process.exit();
 
 
     test("create new user with existing tag", function (t) {
-        var admin2 = new User();
+        var admin2 = new Models.User();
         admin2.login = "admin2";
         admin2.email = "admin2@admin.com";
 
-        Tag.$get(1, function(err, tag) {
+        Models.Tag.$get(1, function(err, tag) {
 
             t.ok(tag !== null, "tag found");
             t.ok(tag.id !== null, "tag has id");
@@ -143,7 +96,7 @@ process.exit();
                 t.ok(admin2.id !== null, "user is saved");
                 t.ok(admin2.main_tag.tag_id !== null, "tag_id is not null -> saved");
 
-                User.$get(admin2.id, function(err, user, raw) {
+                Models.User.$get(admin2.id, function(err, user, raw) {
                     t.ok(user !== null, "there is a user");
                     t.ok(user.id !== null, "has id");
                     t.ok(user.main_tag !== null, "has main_tag");
@@ -155,11 +108,11 @@ process.exit();
     });
 
     test("create new user with new tag", function (t) {
-        var admin = new User();
+        var admin = new Models.User();
         admin.login = "admin3";
         admin.email = "admin3@admin.com";
 
-        var tag = new Tag();
+        var tag = new Models.Tag();
         tag.name = "3rd king";
 
         admin.main_tag = tag;
@@ -169,7 +122,7 @@ process.exit();
             t.ok(admin.main_tag.tag_id !== null, "tag_id is not null -> saved");
             t.ok(tag.tag_id !== null, "tag_id is not null -> saved");
 
-            User.$get(admin.id, function(err, user, raw) {
+            Models.User.$get(admin.id, function(err, user, raw) {
                 t.ok(user.id !== null, "user is saved");
                 t.doesNotThrow(function() {
                     t.ok(user.main_tag.tag_id !== null, "tag_id is not null -> saved");

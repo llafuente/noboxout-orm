@@ -14,11 +14,11 @@
         });
 
     global.log = function() {
-        if (arguments.length > 1) {
-            logger.log("info", util.inspect(arguments, {depth: 5, colors: true}));
-        } else {
-            logger.log("info", util.inspect(arguments[0], {depth: 5, colors: true}));
-        }
+        var args = Array.prototype.slice.call(arguments).map(function(v, i) {
+            return "*" + i + " - " + ("string" === typeof v ? v.trim() : util.inspect(v, {depth: 5, colors: true}))
+        }). join("\n");
+
+        console.log(args);
     };
 
     module.exports.Norm = require("./lib/norm.js");

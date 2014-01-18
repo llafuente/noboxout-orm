@@ -40,11 +40,12 @@
     "ass": "0.0.4"
   },
   "jshintConfig": {
+      "white": true, // Douglas Crockford's JavaScript coding style
       "curly": true,
       "eqeqeq": true,
       "indent": 4,
-      "asi": true,
-      "boss": true,
+      "asi": false,
+      "boss": false,
       "browser": true,
       "devel": true,
       "maxdepth": 4,
@@ -66,9 +67,9 @@
         "log"
       ],
       "quotmark": "double",
-      "smarttabs": true,
+      "smarttabs": false,
       "strict": true,
-      "trailing": false,
+      "trailing": true,
       "undef": true,
       "unused": true
     }
