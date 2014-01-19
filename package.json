@@ -40,7 +40,7 @@
     "ass": "0.0.4"
   },
   "jshintConfig": {
-      "white": true, // Douglas Crockford's JavaScript coding style
+      "white": true,
       "curly": true,
       "eqeqeq": true,
       "indent": 4,
