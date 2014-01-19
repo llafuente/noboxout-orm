@@ -14,37 +14,7 @@
     var dba = new DBA();
     norm.setDBA(dba);
 
-    test("drop tables", function (t) {
-        dba.dropTable("users", function() {
-            dba.dropTable("tags", function() {
-                dba.dropTable("session", function() {
-                    t.end();
-                });
-            });
-        });
-    });
-
-    test("invalid model", function (t) {
-        t.throws(function() {
-            norm.define("Tag", {
-                name: norm.String.LENGTH(255),
-                initialize: function () {
-                    this.__parent();
-                }
-            });
-        });
-        t.end();
-
-    });
-
-    Models = require("./test-models.js")(test);
-
-    test("norm hasOne", function (t) {
-        Models.createAll(dba, function() {
-            t.end();
-        });
-    });
-
+    Models = require("./test-models.js")(test, dba);
 
     test("create tag", function (t) {
 
