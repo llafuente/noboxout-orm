@@ -66,11 +66,10 @@ module.exports = function(test, dba) {
 
     // One to Many - unidirectional
     User.$hasMany(User, {
-        property: "mentor",
+        property: "mentors",
         fk: "mentor_id",
         canBeNull: true
     });
-
 
     test("drop tables", function (t) {
         var deleteAll = function () {
@@ -100,7 +99,9 @@ module.exports = function(test, dba) {
 
         t.equal(User.$table.fields.indexOf("sess_id") !== -1, true, "has user_perm_id field");
         t.equal(User.$table.structure["sess_id"].$dbtype, "integer", "fk is an integer");
-        t.equal(User.prototype.session !== undefined, true, "fk is an integer");
+        t.equal(User.prototype.session, null, "session property is null");
+
+        t.deepEqual(User.prototype.mentors, [], "mentors default is empty array");
         t.equal(Session.prototype.owner !== undefined, true, "fk is an integer");
 
         t.end();
