@@ -67,8 +67,8 @@
                 t.deepEqual(math.mentors, [], "mentors is an array");
                 Models.User.$get(1, function(err, science) {
                     t.deepEqual(science.mentors, [], "mentors is an array");
-                    user.mentors.push(math);
-                    user.mentors.push(science);
+                    user.addMentors(math);
+                    user.addMentors(science);
 
                     user.$store(function() {
                         t.end();
@@ -81,6 +81,7 @@
     test("create new user with new tag", function (t) {
         Models.User.$get(3, function(err, student) {
             t.equal(student.mentors.length, 2, "has two mentors");
+            log(student.$data);
             t.end();
         });
     });
