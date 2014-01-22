@@ -2,6 +2,9 @@ module.exports = function(test, dba) {
     "use strict";
 
     var norm = require("../index.js").Norm,
+        object = require("object-enhancements"),
+        array = require("array-enhancements"),
+        fun = require("function-enhancements"),
         Tag,
         Session,
         User,
@@ -96,9 +99,10 @@ module.exports = function(test, dba) {
         test("model diffs", function (t) {
             var tag = new Tag({name: "xxx"});
 
-            t.equal(Object.empty(tag.$changes()), true, "there is no changes yet!");
+            t.equal(object.empty(tag.$changes()), true, "there is no changes yet!");
 
             tag.name = "yyy";
+
             t.deepEqual(tag.$changes(), {name: "yyy"}, "there is no changes yet!");
 
             tag = new Tag();
@@ -122,10 +126,10 @@ module.exports = function(test, dba) {
 
     test("drop tables", function (t) {
 
-        var deleteAll = function () {
+        var deleteAll = fun.after(function () {
             console.log("#deleted all tables");
             t.end();
-        }.after(3);
+        });
 
         dba.dropTable("users", deleteAll);
         dba.dropTable("tags", deleteAll);
@@ -168,10 +172,10 @@ module.exports = function(test, dba) {
         for (i in ret) {
             x = ret[i].$createTable();
             creates.push(x[0]);
-            Array.combine(alters, x[1]);
+            array.combine(alters, x[1]);
         }
 
-        Array.combine(creates, alters);
+        array.combine(creates, alters);
 
         dba.querys(creates, function() {
             t.end();

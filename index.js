@@ -34,21 +34,6 @@ Object.defineProperty(global, "__file", {
 (function () {
     "use strict";
 
-    if (!Object.valuesChanges) {
-        Object.valuesChanges = function(obj, obj2, recursive /*todo*/) {
-            var i,
-                ret = {};
-
-            for (i in obj) {
-                if (obj2[i] !== obj[i]) {
-                    ret[i] = obj2[i];
-                }
-            }
-
-            return ret;
-        }
-    }
-
     require("function-enhancements");
     require("object-enhancements");
     require("array-enhancements");
