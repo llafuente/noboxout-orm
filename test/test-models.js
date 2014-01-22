@@ -5,7 +5,8 @@ module.exports = function(test, dba) {
         Tag,
         Session,
         User,
-        ret;
+        ret,
+        i;
 
 
     Tag = norm.define("Tag", {
@@ -18,7 +19,6 @@ module.exports = function(test, dba) {
         prefix: "tag_",
         tableName: "tags"
     });
-
 
     Session = norm.define("Session", {
         id: norm.Number.LENGTH(10).ZEROFILL.UNSIGNED,
@@ -71,7 +71,57 @@ module.exports = function(test, dba) {
         canBeNull: true
     });
 
+    i = 2;
+    while(i--) {
+        test("common model tests", function (t) {
+            var tag = new Tag();
+
+            t.equal(tag.$data.id, null, "data.id is null");
+            t.equal(tag.$data.name, null, "data.name is null");
+
+            t.equal(tag.id, null, "id is null");
+            t.equal(tag.name, null, "name is null");
+            t.equal(tag.$dirty, false, "dirty is null");
+
+            tag.name = "test";
+            t.equal(tag.name, "test", "name is null");
+            t.equal(tag.$dirty, true, "dirty is null");
+
+            t.equal(tag.$data.name, "test", "data.name is null");
+
+            t.end();
+        });
+    }
+
+        test("model diffs", function (t) {
+            var tag = new Tag({name: "xxx"});
+
+            t.equal(Object.empty(tag.$changes()), true, "there is no changes yet!");
+
+            tag.name = "yyy";
+            t.deepEqual(tag.$changes(), {name: "yyy"}, "there is no changes yet!");
+
+            tag = new Tag();
+
+            t.equal(tag.$data.id, null, "data.id is null");
+            t.equal(tag.$data.name, null, "data.name is null");
+
+            t.equal(tag.id, null, "id is null");
+            t.equal(tag.name, null, "name is null");
+            t.equal(tag.$dirty, false, "dirty is null");
+
+            tag.name = "test";
+            t.equal(tag.name, "test", "name is null");
+            t.equal(tag.$dirty, true, "dirty is null");
+
+            t.equal(tag.$data.name, "test", "data.name is null");
+
+            t.end();
+        });
+
+
     test("drop tables", function (t) {
+
         var deleteAll = function () {
             console.log("all delete ??!!!");
             t.end();

@@ -52,50 +52,41 @@
         });
     });
 
-
     test("get student and attach mentors", function (t) {
 
         Models.User.$get(3, function(err, user) {
+            console.log(user);
+            t.equal(user.mentors, [], "mentors is an array");
+            t.end();
+        });
+    });
+
+
+    test("get student and attach mentors", function (t) {
+process.exit();
+        Models.User.$get(3, function(err, user) {
             Models.User.$get(2, function(err, math) {
+                t.equal(math.mentors, [], "mentors is an array");
                 Models.User.$get(1, function(err, science) {
+                    t.equal(science.mentors, [], "mentors is an array");
                     user.mentors.push(math);
                     user.mentors.push(science);
                     log(user);
 
-                    user.$store();
-                    process.exit();
+                    user.$store(function() {
+                        t.end();
+                    });
                 });
             });
         });
     });
 
     test("create new user with new tag", function (t) {
-        var admin = new Models.User();
-        admin.login = "admin3";
-        admin.email = "admin3@admin.com";
-
-        var tag = new Models.Tag();
-        tag.name = "3rd king";
-
-        admin.main_tag = tag;
-
-        admin.$store(function() {
-            t.ok(admin.id !== null, "user is saved");
-            t.ok(admin.main_tag.tag_id !== null, "tag_id is not null -> saved");
-            t.ok(tag.tag_id !== null, "tag_id is not null -> saved");
-
-            Models.User.$get(admin.id, function(err, user, raw) {
-                t.ok(user.id !== null, "user is saved");
-                t.doesNotThrow(function() {
-                    t.ok(user.main_tag.tag_id !== null, "tag_id is not null -> saved");
-                    t.ok(tag.tag_id !== null, "tag_id is not null -> saved");
-                }, "invalid main label");
-
-                t.end();
-            });
+        Models.User.$get(3, function(err, student) {
+            log(student);
+            log(student.mentors);
+            t.end();
         });
-
-
     });
 
     test("create file entity", function (t) {
@@ -108,3 +99,5 @@
     });
 
 }());
+
+
