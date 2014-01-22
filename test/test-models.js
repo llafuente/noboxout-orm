@@ -67,7 +67,7 @@ module.exports = function(test, dba) {
     // One to Many - unidirectional
     User.$hasMany(User, {
         property: "mentors",
-        fk: "mentor_id",
+        foreignKey: "mentor_id",
         canBeNull: true
     });
 

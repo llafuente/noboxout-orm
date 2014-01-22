@@ -52,26 +52,23 @@
         });
     });
 
-    test("get student and attach mentors", function (t) {
+    test("mentors type is array", function (t) {
 
         Models.User.$get(3, function(err, user) {
-            console.log(user);
-            t.equal(user.mentors, [], "mentors is an array");
+            t.deepEqual(user.mentors, [], "mentors is an array");
             t.end();
         });
     });
 
 
     test("get student and attach mentors", function (t) {
-process.exit();
         Models.User.$get(3, function(err, user) {
             Models.User.$get(2, function(err, math) {
-                t.equal(math.mentors, [], "mentors is an array");
+                t.deepEqual(math.mentors, [], "mentors is an array");
                 Models.User.$get(1, function(err, science) {
-                    t.equal(science.mentors, [], "mentors is an array");
+                    t.deepEqual(science.mentors, [], "mentors is an array");
                     user.mentors.push(math);
                     user.mentors.push(science);
-                    log(user);
 
                     user.$store(function() {
                         t.end();
@@ -83,14 +80,9 @@ process.exit();
 
     test("create new user with new tag", function (t) {
         Models.User.$get(3, function(err, student) {
-            log(student);
-            log(student.mentors);
+            t.equal(student.mentors.length, 2, "has two mentors");
             t.end();
         });
-    });
-
-    test("create file entity", function (t) {
-        t.end();
     });
 
     test("end the process", function (t) {
