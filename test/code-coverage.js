@@ -3,7 +3,8 @@ var ass = require('ass').enable(),
     kid,
     test = [
         __dirname + "/test-norm-hasone-unidirectional.js",
-        __dirname + "/test-norm-hasone-bidirectional.js"
+        __dirname + "/test-norm-hasone-bidirectional.js",
+        __dirname + "/test-norm-hasmany-unidirectional.js"
     ],
     current_test = 0;
 
