@@ -7,8 +7,6 @@
         DBA = require("../index.js").DBA,
         tap = require("tap"),
         test = tap.test,
-        Session,
-        User,
         Models;
 
     var dba = new DBA();
@@ -31,7 +29,7 @@
 
     test("get session", function (t) {
 
-        Models.Session.$get(1, function(err, session, raw) {
+        Models.Session.$get(1, function (err, session) {
             t.ok(session.id !== null, "session id ok");
             t.ok(session.owner === null, "has no owner");
             t.end();
@@ -39,7 +37,7 @@
     });
 
     test("create an user an set the session", function (t) {
-        Models.Session.$get(1, function(err, session, raw) {
+        Models.Session.$get(1, function (err, session) {
             var admin = new Models.User();
             admin.login = "admin";
             admin.email = "admin@admin.com";
@@ -47,7 +45,7 @@
             admin.session = session;
 
             t.ok(admin.id === null, "pk is null before save");
-            admin.$store(function() {
+            admin.$store(function () {
                 t.ok(admin.$pk() !== null, "pk is not null after saving");
                 t.end();
             });
@@ -58,7 +56,7 @@
 
 
     test("get user side", function (t) {
-        Models.User.$get(1, function(err, user, raw) {
+        Models.User.$get(1, function (err, user) {
             t.ok(user.id !== null, "user stored correctly");
 
             t.equal(user.login, "admin", "user stored correctly");
@@ -73,7 +71,7 @@
 
     test("get session side", function (t) {
 
-        Models.Session.$get(1, function(err, session, raw) {
+        Models.Session.$get(1, function (err, session) {
 
             t.ok(session.id !== null, "user stored correctly");
 
@@ -88,7 +86,7 @@
     });
 
     test("end the process", function (t) {
-        setTimeout(function() { process.exit();}, 500);
+        setTimeout(function () { process.exit() ; }, 500);
         t.end();
     });
 

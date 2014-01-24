@@ -1,14 +1,13 @@
 (function () {
     "use strict";
-    require('ass');
+    require("ass");
 
-    var util = require("util"),
+    var Fun = require("function-enhancements"),
+        util = require("util"),
         norm = require("../index.js").Norm,
         DBA = require("../index.js").DBA,
         tap = require("tap"),
         test = tap.test,
-        Tag,
-        User,
         Models;
 
     var dba = new DBA();
@@ -22,7 +21,7 @@
         user.email = "science@university.com";
 
         t.ok(user.id === null, "pk is null before save");
-        user.$store(function() {
+        user.$store(function () {
             t.ok(user.$pk() !== null, "pk is not null after saving");
             t.end();
         });
@@ -34,7 +33,7 @@
         user.email = "math@university.com";
 
         t.ok(user.id === null, "pk is null before save");
-        user.$store(function() {
+        user.$store(function () {
             t.ok(user.$pk() !== null, "pk is not null after saving");
             t.end();
         });
@@ -46,7 +45,7 @@
         user.email = "student@university.com";
 
         t.ok(user.id === null, "pk is null before save");
-        user.$store(function() {
+        user.$store(function () {
             t.ok(user.$pk() !== null, "pk is not null after saving");
             t.end();
         });
@@ -54,7 +53,7 @@
 
     test("mentors type is array", function (t) {
 
-        Models.User.$get(3, function(err, user) {
+        Models.User.$get(3, function (err, user) {
             t.deepEqual(user.mentors, [], "mentors is an array");
             t.end();
         });
@@ -62,15 +61,16 @@
 
 
     test("get student and attach mentors", function (t) {
-        Models.User.$get(3, function(err, user) {
-            Models.User.$get(2, function(err, math) {
+        Models.User.$get(3, function (err, user) {
+            Models.User.$get(2, function (err, math) {
                 t.deepEqual(math.mentors, [], "mentors is an array");
-                Models.User.$get(1, function(err, science) {
+                Models.User.$get(1, function (err, science) {
                     t.deepEqual(science.mentors, [], "mentors is an array");
                     user.addMentors(math);
                     user.addMentors(science);
 
-                    user.$store(function() {
+                    user.$store(function () {
+                        t.equal(user.mentors.length, 2, "has two mentors");
                         t.end();
                     });
                 });
@@ -78,16 +78,73 @@
         });
     });
 
-    test("create new user with new tag", function (t) {
+    var i = 2;
+    while (i--) {
+        test("remove test" + i, function (t) {
+            Models.User.$get(3, function (err, student) {
+                var removed_mentor = student.mentors[0];
+                var l = student.mentors.length;
+                student.removeMentors(removed_mentor);
+
+                t.equal(student.mentors.length, l - 1, "has one mentors");
+
+                t.equal(removed_mentor.$data.mentor_id, null, "mentor_id is set to null");
+
+                var check_removed = Fun.after(function () {
+                    Models.User.$get(removed_mentor.id, function (err, science) {
+                        t.equal(science.$db.mentor_id, null, "science mentor_id is set to null");
+                        t.equal(science.$data.mentor_id, null, "science mentor_id is set to null");
+
+                        t.end();
+                    });
+                }, 2);
+
+                removed_mentor.$store(check_removed);
+                student.$store(check_removed);
+
+            });
+        });
+    }
+
+/*
+    test("remove test", function (t) {
         Models.User.$get(3, function(err, student) {
-            t.equal(student.mentors.length, 2, "has two mentors");
-            log(student.$data);
-            t.end();
+            t.equal(student.mentors.length, 1, "has one mentors");
+            var removed_mentor = student.mentors[0];
+            student.removeMentors(removed_mentor);
+
+            Models.User.$get(2, function(err, science) {
+                t.equal(science.$db.mentors_id, null, "science mentor_id is set to null")
+                t.equal(science.$data.mentors_id, null, "science mentor_id is set to null")
+
+                t.end();
+            });
+
+            removed_mentor.$store();
+            student.$store();
+
         });
     });
+/*
+    test("remove test", function (t) {
+        Models.User.$get(3, function(err, student) {
+            t.equal(student.mentors.length, 0, "has one mentors");
+
+            Models.User.$get(2, function(err, science) {
+                t.equal(science.$db.mentors_id, null, "science mentor_id is set to null")
+                t.equal(science.$data.mentors_id, null, "science mentor_id is set to null")
+
+                t.end();
+            });
+
+            student.$store();
+
+        });
+    });
+*/
 
     test("end the process", function (t) {
-        setTimeout(function() { process.exit();}, 500);
+        setTimeout(function () { process.exit(); }, 500);
         t.end();
     });
 

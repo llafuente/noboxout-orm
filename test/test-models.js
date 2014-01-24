@@ -1,4 +1,4 @@
-module.exports = function(test, dba) {
+module.exports = function (test, dba) {
     "use strict";
 
     var norm = require("../index.js").Norm,
@@ -75,7 +75,7 @@ module.exports = function(test, dba) {
     });
 
     i = 2;
-    while(i--) {
+    while (i--) {
         test("common model tests", function (t) {
             var tag = new Tag();
 
@@ -96,32 +96,32 @@ module.exports = function(test, dba) {
         });
     }
 
-        test("model diffs", function (t) {
-            var tag = new Tag({name: "xxx"});
+    test("model diffs", function (t) {
+        var tag = new Tag({name: "xxx"});
 
-            t.equal(object.empty(tag.$changes()), true, "there is no changes yet!");
+        t.equal(object.empty(tag.$changes()), true, "there is no changes yet!");
 
-            tag.name = "yyy";
+        tag.name = "yyy";
 
-            t.deepEqual(tag.$changes(), {name: "yyy"}, "there is no changes yet!");
+        t.deepEqual(tag.$changes(), {name: "yyy"}, "there is no changes yet!");
 
-            tag = new Tag();
+        tag = new Tag();
 
-            t.equal(tag.$data.id, null, "data.id is null");
-            t.equal(tag.$data.name, null, "data.name is null");
+        t.equal(tag.$data.id, null, "data.id is null");
+        t.equal(tag.$data.name, null, "data.name is null");
 
-            t.equal(tag.id, null, "id is null");
-            t.equal(tag.name, null, "name is null");
-            t.equal(tag.$dirty, false, "dirty is null");
+        t.equal(tag.id, null, "id is null");
+        t.equal(tag.name, null, "name is null");
+        t.equal(tag.$dirty, false, "dirty is null");
 
-            tag.name = "test";
-            t.equal(tag.name, "test", "name is null");
-            t.equal(tag.$dirty, true, "dirty is null");
+        tag.name = "test";
+        t.equal(tag.name, "test", "name is null");
+        t.equal(tag.$dirty, true, "dirty is null");
 
-            t.equal(tag.$data.name, "test", "data.name is null");
+        t.equal(tag.$data.name, "test", "data.name is null");
 
-            t.end();
-        });
+        t.end();
+    });
 
 
     test("drop tables", function (t) {
@@ -148,11 +148,11 @@ module.exports = function(test, dba) {
         t.equal(User.$table.fields.length, 8); // create_at + updated_at
 
         t.equal(User.$table.fields.indexOf("tag_id") !== -1, true, "has user_perm_id field");
-        t.equal(User.$table.structure["tag_id"].$dbtype, "integer", "fk is an integer");
+        t.equal(User.$table.structure.tag_id.$dbtype, "integer", "fk is an integer");
         t.equal(User.prototype.main_tag !== undefined, true, "fk is an integer");
 
         t.equal(User.$table.fields.indexOf("sess_id") !== -1, true, "has user_perm_id field");
-        t.equal(User.$table.structure["sess_id"].$dbtype, "integer", "fk is an integer");
+        t.equal(User.$table.structure.sess_id.$dbtype, "integer", "fk is an integer");
         t.equal(User.prototype.session, null, "session property is null");
 
 
@@ -177,7 +177,7 @@ module.exports = function(test, dba) {
 
         array.combine(creates, alters);
 
-        dba.querys(creates, function() {
+        dba.querys(creates, function () {
             t.end();
         });
     });

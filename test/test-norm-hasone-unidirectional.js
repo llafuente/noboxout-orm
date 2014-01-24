@@ -7,8 +7,6 @@
         DBA = require("../index.js").DBA,
         tap = require("tap"),
         test = tap.test,
-        Tag,
-        User,
         Models;
 
     var dba = new DBA();
@@ -43,7 +41,7 @@
         admin.email = "admin@admin.com";
 
         t.ok(admin.id === null, "pk is null before save");
-        admin.$store(function() {
+        admin.$store(function () {
             t.ok(admin.$pk() !== null, "pk is not null after saving");
             t.end();
         });
@@ -55,18 +53,18 @@
         admin2.login = "admin2";
         admin2.email = "admin2@admin.com";
 
-        Models.Tag.$get(1, function(err, tag) {
+        Models.Tag.$get(1, function (err, tag) {
 
             t.ok(tag !== null, "tag found");
             t.ok(tag.id !== null, "tag has id");
             t.ok(tag.name === "king", "tag has id");
 
             admin2.main_tag = tag;
-            admin2.$store(function() {
+            admin2.$store(function () {
                 t.ok(admin2.id !== null, "user is saved");
                 t.ok(admin2.main_tag.tag_id !== null, "tag_id is not null -> saved");
 
-                Models.User.$get(admin2.id, function(err, user, raw) {
+                Models.User.$get(admin2.id, function (err, user, raw) {
                     t.ok(user !== null, "there is a user");
                     t.ok(user.id !== null, "has id");
                     t.ok(user.main_tag !== null, "has main_tag");
@@ -87,14 +85,14 @@
 
         admin.main_tag = tag;
 
-        admin.$store(function() {
+        admin.$store(function () {
             t.ok(admin.id !== null, "user is saved");
             t.ok(admin.main_tag.tag_id !== null, "tag_id is not null -> saved");
             t.ok(tag.tag_id !== null, "tag_id is not null -> saved");
 
-            Models.User.$get(admin.id, function(err, user, raw) {
+            Models.User.$get(admin.id, function (err, user, raw) {
                 t.ok(user.id !== null, "user is saved");
-                t.doesNotThrow(function() {
+                t.doesNotThrow(function () {
                     t.ok(user.main_tag.tag_id !== null, "tag_id is not null -> saved");
                     t.ok(tag.tag_id !== null, "tag_id is not null -> saved");
                 }, "invalid main label");
@@ -111,7 +109,7 @@
     });
 
     test("end the process", function (t) {
-        setTimeout(function() { process.exit();}, 500);
+        setTimeout(function () { process.exit(); }, 500);
         t.end();
     });
 

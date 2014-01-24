@@ -15,7 +15,65 @@ I'm working on it (maybe not right now, but daily...)
 ## TODO list
 
 * storage: memory
-* hasMany
+
+## Define models
+
+
+## Define relations
+
+### OneToOne relation unidirectional
+```js
+var User = norm.define("User", {});
+var Session = norm.define("Session", {});
+
+User.hasOne(Session);
+
+```
+
+### OneToOne relation bidirectional
+```js
+var User = norm.define("User", {});
+var Session = norm.define("Session", {});
+
+User.hasOne(Session, {refProperty: "owner"});
+
+```
+
+### ManyToOne relation unidirectional
+```js
+var Person = norm.define("Person", {});
+var Country = norm.define("Country", {});
+
+Person.hasOne(Country, {unique: false});
+
+```
+
+### ManyToOne relation bidirectional
+```js
+var Person = norm.define("Person", {});
+var Country = norm.define("Country", {});
+
+Person.hasOne(Country, {unique: false, refProperty: "citizens"});
+
+```
+
+
+### ManyToOne self-relation unidirectional
+```js
+var User = norm.define("User", {});
+
+User.hasMany(User, {property: "mentors", foreignKey: "mentor_id"});
+
+```
+
+### ManyToOne self-relation bidirectional
+```js
+var User = norm.define("User", {});
+
+User.hasMany(User, {property: "mentors", foreignKey: "mentor_id", refProperty: "mentee"});
+
+```
+
 
 ## Install
 
