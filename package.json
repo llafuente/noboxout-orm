@@ -1,10 +1,14 @@
 {
   "name": "noboxout-orm",
   "version": "0.0.1",
-  "description": "Noboxout ORM",
+  "description": "Noboxout ORM (object relational mapper) with MYSQL backend",
   "main": "./index.js",
   "keywords": [
-    "ORM"
+    "ORM",
+    "database",
+    "mysql",
+    "transaction",
+    "model",
   ],
   "directories": {
     "lib": ".",
