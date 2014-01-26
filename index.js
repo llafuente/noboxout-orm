@@ -57,9 +57,9 @@ Object.defineProperty(global, "__file", {
         logger.info(__file, __line, args);
     };
 
-    module.exports.Norm = require("./lib/norm.js");
+    module.exports.Connection = require("./lib/connection.js");
     module.exports.DBA = require("./lib/dba.js");
-    module.exports.Mysql = require("./lib/mysql.js");
-
+    module.exports.Norm = require("./lib/norm.js");
+    module.exports.Entity = require("./lib/entity.js");
 
 }());

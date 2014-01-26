@@ -1,22 +1,14 @@
-(function () {
+function run_tests(test, norm, con) {
     "use strict";
-    require('ass');
+    var Models,
+        Fun = require("function-enhancements");
 
-    var util = require("util"),
-        norm = require("../index.js").Norm,
-        DBA = require("../index.js").DBA,
-        tap = require("tap"),
-        test = tap.test,
-        Models;
 
-    var dba = new DBA();
-    norm.setDBA(dba);
-
-    Models = require("./test-models.js")(test, dba);
+    Models = require("./test-models.js")(test, con);
 
     test("create tag", function (t) {
 
-        var p = new Models.Tag();
+        var p = Models.Tag.$create(con);
         p.name = "king";
 
         t.ok(p.id === null, "pk is null before save");
@@ -36,7 +28,7 @@
         //console.log(util.inspect(Permission, {depth: 5, colors: true}));
         //console.log(util.inspect(User, {depth: 5, colors: true}));
 
-        var admin = new Models.User();
+        var admin = Models.User.$create(con);
         admin.login = "admin";
         admin.email = "admin@admin.com";
 
@@ -49,11 +41,11 @@
 
 
     test("create new user with existing tag", function (t) {
-        var admin2 = new Models.User();
+        var admin2 = Models.User.$create(con);
         admin2.login = "admin2";
         admin2.email = "admin2@admin.com";
 
-        Models.Tag.$get(1, function (err, tag) {
+        Models.Tag.$get(con, 1, function (err, tag) {
 
             t.ok(tag !== null, "tag found");
             t.ok(tag.id !== null, "tag has id");
@@ -64,7 +56,7 @@
                 t.ok(admin2.id !== null, "user is saved");
                 t.ok(admin2.main_tag.tag_id !== null, "tag_id is not null -> saved");
 
-                Models.User.$get(admin2.id, function (err, user, raw) {
+                Models.User.$get(con, admin2.id, function (err, user, raw) {
                     t.ok(user !== null, "there is a user");
                     t.ok(user.id !== null, "has id");
                     t.ok(user.main_tag !== null, "has main_tag");
@@ -76,11 +68,11 @@
     });
 
     test("create new user with new tag", function (t) {
-        var admin = new Models.User();
+        var admin = Models.User.$create(con);
         admin.login = "admin3";
         admin.email = "admin3@admin.com";
 
-        var tag = new Models.Tag();
+        var tag = Models.Tag.$create(con);
         tag.name = "3rd king";
 
         admin.main_tag = tag;
@@ -90,7 +82,7 @@
             t.ok(admin.main_tag.tag_id !== null, "tag_id is not null -> saved");
             t.ok(tag.tag_id !== null, "tag_id is not null -> saved");
 
-            Models.User.$get(admin.id, function (err, user, raw) {
+            Models.User.$get(con, admin.id, function (err, user, raw) {
                 t.ok(user.id !== null, "user is saved");
                 t.doesNotThrow(function () {
                     t.ok(user.main_tag.tag_id !== null, "tag_id is not null -> saved");
@@ -111,6 +103,34 @@
     test("end the process", function (t) {
         setTimeout(function () { process.exit(); }, 500);
         t.end();
+    });
+
+}
+
+
+(function () {
+    "use strict";
+    require("ass");
+
+    var util = require("util"),
+        norm = require("../index.js").Norm,
+        tap = require("tap"),
+        test = tap.test;
+
+    norm.setup({
+        mysql: {
+            host     : "127.0.0.1",
+            user     : "root",
+            password : "toor",
+            database: "norm"
+        }
+    });
+
+    test("reserve a connection", function (t) {
+        norm.reserve(function(err, con) {
+            run_tests(test, norm, con);
+            t.end();
+        });
     });
 
 }());

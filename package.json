@@ -8,14 +8,14 @@
     "database",
     "mysql",
     "transaction",
-    "model",
+    "model"
   ],
   "directories": {
     "lib": ".",
     "test": "test"
   },
   "scripts": {
-    "test": "tap test/test-*.js",
+    "test": "tap test/test-norm-*.js",
     "coverage": "node test/code-coverage.js"
   },
   "repository": {

@@ -1,7 +1,8 @@
-module.exports = function (test, dba) {
+module.exports = function (test, con) {
     "use strict";
 
     var norm = require("../index.js").Norm,
+        dba =  require("../index.js").DBA,
         object = require("object-enhancements"),
         array = require("array-enhancements"),
         fun = require("function-enhancements"),
@@ -131,9 +132,9 @@ module.exports = function (test, dba) {
             t.end();
         });
 
-        dba.dropTable("users", deleteAll);
-        dba.dropTable("tags", deleteAll);
-        dba.dropTable("session", deleteAll);
+        con.query(dba.dropTable("users"), deleteAll);
+        con.query(dba.dropTable("tags"), deleteAll);
+        con.query(dba.dropTable("session"), deleteAll);
     });
 
 
@@ -177,7 +178,7 @@ module.exports = function (test, dba) {
 
         array.combine(creates, alters);
 
-        dba.querys(creates, function () {
+        con.querys(creates, function () {
             t.end();
         });
     });
