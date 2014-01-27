@@ -9,6 +9,7 @@ module.exports = function (test, con) {
         Tag,
         Session,
         User,
+        Friendship,
         ret,
         i;
 
@@ -35,8 +36,6 @@ module.exports = function (test, con) {
         tableName: "sessions"
     });
 
-
-
     User = norm.define("User", {
         id: norm.Number.LENGTH(10).UNSIGNED,
         login: norm.String.LENGTH(255),
@@ -48,6 +47,20 @@ module.exports = function (test, con) {
         prefix: "user_",
         tableName: "users"
     });
+
+
+    Friendship = norm.define("Friendship", {
+        id: norm.Number.LENGTH(10).UNSIGNED,
+        status: norm.Enum.VALUES(["PENDING", "OK"]),
+        email: norm.String.LENGTH(255),
+        initialize: function () {
+            this.__parent();
+        }
+    }, {
+        prefix: "fr_",
+        tableName: "friends"
+    });
+
 
 
     //
@@ -72,6 +85,17 @@ module.exports = function (test, con) {
     User.$hasMany(User, {
         property: "mentors",
         foreignKey: "mentor_id",
+        canBeNull: true
+    });
+
+
+    Friendship.$hasOne(User, {
+        property: "user1",
+        canBeNull: true
+    });
+
+    Friendship.$hasOne(User, {
+        property: "user2",
         canBeNull: true
     });
 

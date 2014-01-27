@@ -51,7 +51,7 @@ Object.defineProperty(global, "__file", {
 
     global.log = function () {
         var args = Array.prototype.slice.call(arguments).map(function (v, i) {
-            return ("string" === typeof v ? v.trim() : util.inspect(v, {depth: 5, colors: true}));
+            return ("string" === typeof v ? v.trim() : util.inspect(v, {depth: 5, colors: true}).replace(/\\n/g, "\n"));
         }).join(" - ");
 
         logger.info(__file, __line, args);
