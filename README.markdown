@@ -13,8 +13,12 @@ I'm working on it (maybe not right now, but daily...)
 * storage: memory
 * memcached
 * transaction support
-* pool handling
-* only update changes
+* only update known changes
+* Entity.$key("name", ["field1", "field2"]);
+* Entity.$find(); use ==
+* Entity.$search(); use LIKE is string
+* Entity.$delete();
+
 * many more tests
 
 ## Define models
