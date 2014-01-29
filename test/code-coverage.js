@@ -22,11 +22,6 @@ function next_test() {
         ass.report('html', function(err, report) {
             require('fs').writeFileSync('./coverage.html', report);
         });
-
-        // ass error
-        // ass.report('json', function(err, r) {
-        //    console.log(r);
-        //});
     }
 }
 

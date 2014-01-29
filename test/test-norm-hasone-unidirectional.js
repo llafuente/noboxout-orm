@@ -20,14 +20,6 @@ function run_tests(test, norm, con) {
     });
 
     test("create user", function (t) {
-
-        //* @JoinColumn(name="container_id", referencedColumnName="id", nullable=true)
-
-        //User.hasOne(Permission, "perm_id");
-
-        //console.log(util.inspect(Permission, {depth: 5, colors: true}));
-        //console.log(util.inspect(User, {depth: 5, colors: true}));
-
         var admin = Models.User.$create(con);
         admin.login = "admin";
         admin.email = "admin@admin.com";

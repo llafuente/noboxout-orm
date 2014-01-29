@@ -60,7 +60,6 @@ function run_tests(test, norm, con) {
     });
 
     test("get session side", function (t) {
-
         Models.Session.$get(con, 1, function (err, session) {
 
             t.ok(session.id !== null, "user stored correctly");
@@ -72,6 +71,26 @@ function run_tests(test, norm, con) {
 
 
             t.end();
+        });
+    });
+
+    test("get session side", function (t) {
+        Models.User.$get(con, 1, function (err, user) {
+            user.login = "edited";
+            user.$store(function() {
+                t.end();
+            });
+        });
+    });
+
+
+    test("get session side", function (t) {
+        Models.User.$delete(con, 1, function (err, session) {
+            t.ok(!err, "deleted successfully");
+            Models.Session.$get(con, 1, function (err, session) {
+                t.ok(!err, "deleted successfully");
+                t.end();
+            });
         });
     });
 

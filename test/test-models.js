@@ -152,7 +152,6 @@ module.exports = function (test, con) {
     test("drop tables", function (t) {
 
         var deleteAll = fun.after(function () {
-            console.log("#deleted all tables");
             t.end();
         });
 

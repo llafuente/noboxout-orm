@@ -36,7 +36,7 @@
     "array-enhancements": "*",
     "object-enhancements": "*",
     "node-class": "*",
-    "winston": "*",
+    "colors" : "*",
     "mysql" : "*"
   },
   "devDependencies": {

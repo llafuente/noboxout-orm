@@ -82,7 +82,6 @@ function run_tests(test, norm, con) {
                 t.equal(removed_mentor.$data.mentor_id, null, "mentor_id is set to null");
 
                 var check_removed = Fun.after(function () {
-                    console.log(removed_mentor.id);
                     Models.User.$get(con, removed_mentor.id, function (err, science) {
                         t.equal(science.$db.mentor_id, null, "science mentor_id is set to null");
                         t.equal(science.$data.mentor_id, null, "science mentor_id is set to null");

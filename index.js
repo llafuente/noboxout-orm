@@ -31,31 +31,27 @@ Object.defineProperty(global, "__file", {
     }
 });
 
+Object.defineProperty(global, "__callee", {
+    get: function () {
+        return __stack[2].getFileName().split("/").slice(-1)[0]+ ":" +__stack[2].getLineNumber();
+    }
+});
+
+
+
+
 (function () {
     "use strict";
 
     require("function-enhancements");
     require("object-enhancements");
     require("array-enhancements");
+    require('colors');
 
-    var winston = require("winston"),
-        util = require("util"),
-        logger = new (winston.Logger)({
-            transports: [
-                new (winston.transports.Console)(), //({ raw: true }),
-            ]
-        });
+    var util = require("util");
 
     util.inspect.styles.undefined = "red";
     util.inspect.styles.date = "green";
-
-    global.log = function () {
-        var args = Array.prototype.slice.call(arguments).map(function (v, i) {
-            return ("string" === typeof v ? v.trim() : util.inspect(v, {depth: 5, colors: true}).replace(/\\n/g, "\n"));
-        }).join(" - ");
-
-        logger.info(__file, __line, args);
-    };
 
     module.exports.Connection = require("./lib/connection.js");
     module.exports.DBA = require("./lib/dba.js");
