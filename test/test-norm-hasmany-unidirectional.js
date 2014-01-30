@@ -92,10 +92,18 @@ function run_tests(test, norm, con) {
 
                 removed_mentor.$store(check_removed);
                 student.$store(check_removed);
-
             });
         });
     }
+    test("get student and attach mentors", function (t) {
+        Models.User.$find({login: "Math Master"}).queryOne(con, function(err, teacher) {
+            t.equal(teacher.login, "Math Master", "Math!");
+
+            t.end();
+        });
+    });
+
+
 
 /*
     test("remove test", function (t) {
