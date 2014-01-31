@@ -1,6 +1,7 @@
 function run_tests(test, norm, con) {
     "use strict";
-    var Models;
+    var Models,
+        Fun = require("function-enhancements");
 
     Models = require("./test-models.js")(test, con);
 
@@ -19,7 +20,7 @@ function run_tests(test, norm, con) {
 
     test("get session", function (t) {
 
-        Models.Session.$get(con, 1, function (err, session) {
+        Models.Session.$get(1).queryOne(con, function (err, session) {
             t.ok(session.id !== null, "session id ok");
             t.ok(session.owner === null, "has no owner");
             t.end();
@@ -27,7 +28,7 @@ function run_tests(test, norm, con) {
     });
 
     test("create an user an set the session", function (t) {
-        Models.Session.$get(con, 1, function (err, session) {
+        Models.Session.$get(1).queryOne(con, function (err, session) {
             var admin = Models.User.$create(con);
             admin.login = "admin";
             admin.email = "admin@admin.com";
@@ -46,7 +47,7 @@ function run_tests(test, norm, con) {
 
 
     test("get user side", function (t) {
-        Models.User.$get(con, 1, function (err, user) {
+        Models.User.$get(1).queryOne(con, function (err, user) {
             t.ok(user.id !== null, "user stored correctly");
 
             t.equal(user.login, "admin", "user stored correctly");
@@ -60,7 +61,7 @@ function run_tests(test, norm, con) {
     });
 
     test("get session side", function (t) {
-        Models.Session.$get(con, 1, function (err, session) {
+        Models.Session.$get(1).queryOne(con, function (err, session) {
 
             t.ok(session.id !== null, "user stored correctly");
 
@@ -75,7 +76,7 @@ function run_tests(test, norm, con) {
     });
 
     test("get session side", function (t) {
-        Models.User.$get(con, 1, function (err, user) {
+        Models.User.$get(1).queryOne(con, function (err, user) {
             user.login = "edited";
             user.$store(function() {
                 t.end();
@@ -87,10 +88,41 @@ function run_tests(test, norm, con) {
     test("get session side", function (t) {
         Models.User.$delete(con, 1, function (err, session) {
             t.ok(!err, "deleted successfully");
-            Models.Session.$get(con, 1, function (err, session) {
+            Models.Session.$get(1).queryOne(con, function (err, session) {
                 t.ok(!err, "deleted successfully");
                 t.end();
             });
+        });
+    });
+
+    test("fixtures", function (t) {
+        var next = Fun.after(function() {t.end();}, 3);
+
+        var admin = Models.User.$create(con);
+        admin.login = "admin";
+        admin.email = "admin@admin.com";
+        admin.$store(next);
+
+        admin = Models.User.$create(con);
+        admin.login = "pepe";
+        admin.email = "pepe@admin.com";
+        admin.$store(next);
+
+        admin = Models.User.$create(con);
+        admin.login = "dadmin";
+        admin.email = "dadmin@admin.com";
+        admin.$store(next);
+    });
+    test("querys", function (t) {
+
+        Models.User.$search({login: "dmi"}).query(con, function (err, users) {
+            t.equal(users.length, 2, "two users found");
+
+            t.equal(users[0].login, "admin", "first admin");
+            t.equal(users[1].login, "dadmin", "second dadmin");
+
+            console.log(users);
+            t.end();
         });
     });
 

@@ -44,7 +44,7 @@ function run_tests(test, norm, con) {
 
     test("mentors type is array", function (t) {
 
-        Models.User.$get(con, 3, function (err, user) {
+        Models.User.$get(3).queryOne(con, function (err, user) {
             t.deepEqual(user.mentors, [], "mentors is an array");
             t.end();
         });
@@ -52,10 +52,10 @@ function run_tests(test, norm, con) {
 
 
     test("get student and attach mentors", function (t) {
-        Models.User.$get(con, 3, function (err, user) {
-            Models.User.$get(con, 2, function (err, math) {
+        Models.User.$get(3).queryOne(con, function (err, user) {
+            Models.User.$get(2).queryOne(con, function (err, math) {
                 t.deepEqual(math.mentors, [], "mentors is an array");
-                Models.User.$get(con, 1, function (err, science) {
+                Models.User.$get(1).queryOne(con, function (err, science) {
                     t.deepEqual(science.mentors, [], "mentors is an array");
                     user.addMentors(math);
                     user.addMentors(science);
@@ -72,7 +72,7 @@ function run_tests(test, norm, con) {
     var i = 2;
     while (i--) {
         test("remove test" + i, function (t) {
-            Models.User.$get(con, 3, function (err, student) {
+            Models.User.$get(3).queryOne(con, function (err, student) {
                 var removed_mentor = student.mentors[0];
                 var l = student.mentors.length;
                 student.removeMentors(removed_mentor);
@@ -82,7 +82,7 @@ function run_tests(test, norm, con) {
                 t.equal(removed_mentor.$data.mentor_id, null, "mentor_id is set to null");
 
                 var check_removed = Fun.after(function () {
-                    Models.User.$get(con, removed_mentor.id, function (err, science) {
+                    Models.User.$get(removed_mentor.id).queryOne(con, function (err, science) {
                         t.equal(science.$db.mentor_id, null, "science mentor_id is set to null");
                         t.equal(science.$data.mentor_id, null, "science mentor_id is set to null");
 
