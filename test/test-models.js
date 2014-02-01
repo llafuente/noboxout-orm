@@ -162,13 +162,13 @@ module.exports = function (test, con) {
 
 
     test("check models", function (t) {
-        t.ok(norm.models.tags !== undefined);
+        t.ok(norm.models.Tag !== undefined);
         t.equal(Tag.$table.fields.length, 4); // create_at + updated_at
 
-        t.ok(norm.models.sessions !== undefined);
+        t.ok(norm.models.Session !== undefined);
         t.equal(Session.$table.fields.length, 4); // create_at + updated_at
 
-        t.ok(norm.models.users !== undefined);
+        t.ok(norm.models.User !== undefined);
         t.equal(User.$table.fields.length, 8); // create_at + updated_at
 
         t.equal(User.$table.fields.indexOf("tag_id") !== -1, true, "has user_perm_id field");

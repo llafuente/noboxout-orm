@@ -62,7 +62,6 @@ function run_tests(test, norm, con) {
 
     test("get session side", function (t) {
         Models.Session.$get(1).queryOne(con, function (err, session) {
-
             t.ok(session.id !== null, "user stored correctly");
 
             t.ok(session.owner !== null, "pk is not null after saving");
