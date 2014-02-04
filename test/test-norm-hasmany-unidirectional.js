@@ -72,7 +72,7 @@ function run_tests(test, norm, con) {
     var i = 2;
     while (i--) {
         test("remove test" + i, function (t) {
-            Models.User.$get(3).queryOne(con, function (err, student) {
+            Models.User.$get(3, {eager: true}).queryOne(con, function (err, student) {
                 var removed_mentor = student.mentors[0];
                 var l = student.mentors.length;
                 student.removeMentors(removed_mentor);

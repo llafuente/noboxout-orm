@@ -46,8 +46,10 @@ function run_tests(test, norm, con) {
     });
 
 
-    test("get user side", function (t) {
-        Models.User.$get(1).queryOne(con, function (err, user) {
+    test
+    ("get user side", function (t) {
+
+        Models.User.$get(1, {eager: true}).queryOne(con, function (err, user) {
             t.ok(user.id !== null, "user stored correctly");
 
             t.equal(user.login, "admin", "user stored correctly");
@@ -61,7 +63,7 @@ function run_tests(test, norm, con) {
     });
 
     test("get session side", function (t) {
-        Models.Session.$get(1).queryOne(con, function (err, session) {
+        Models.Session.$get(1, {eager: true}).queryOne(con, function (err, session) {
             t.ok(session.id !== null, "user stored correctly");
 
             t.ok(session.owner !== null, "pk is not null after saving");

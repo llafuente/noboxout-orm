@@ -48,7 +48,7 @@ function run_tests(test, norm, con) {
                 t.ok(admin2.id !== null, "user is saved");
                 t.ok(admin2.main_tag.tag_id !== null, "tag_id is not null -> saved");
 
-                Models.User.$get(admin2.id).queryOne(con, function (err, user, raw) {
+                Models.User.$get(admin2.id, {eager: true}).queryOne(con, function (err, user, raw) {
                     t.ok(user !== null, "there is a user");
                     t.ok(user.id !== null, "has id");
                     t.ok(user.main_tag !== null, "has main_tag");
@@ -74,7 +74,7 @@ function run_tests(test, norm, con) {
             t.ok(admin.main_tag.tag_id !== null, "tag_id is not null -> saved");
             t.ok(tag.tag_id !== null, "tag_id is not null -> saved");
 
-            Models.User.$get(admin.id).queryOne(con, function (err, user, raw) {
+            Models.User.$get(admin.id, {eager: true}).queryOne(con, function (err, user, raw) {
                 t.ok(user.id !== null, "user is saved");
                 t.doesNotThrow(function () {
                     t.ok(user.main_tag.tag_id !== null, "tag_id is not null -> saved");
