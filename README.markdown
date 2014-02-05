@@ -25,10 +25,10 @@ I'm working on it (maybe not right now, but daily...)
 
 Usage of prefix.
 Prefix is needed by *norm* because it do not handle field name collisions.
-We consider a bad practice to have in your database the same field name twice, mainly because it force the ORM to query everything and remap later. Also because we are lazy "*SELECT * FROM X JOIN Y*" will never give an error this way. 
+We consider a bad practice to have in your database the same field name twice, mainly because it force the ORM to query everything and remap later. Also because we are lazy "*SELECT * FROM X JOIN Y*" will never give an error this way.
 
 
-```js 
+```js
 
     var Country,
         Session,
@@ -141,6 +141,24 @@ var User = norm.define("User" /* ... */);
 
 User.hasMany(User, {property: "mentors", foreignKey: "mentor_id", refProperty: "mentee"});
 
+```
+
+
+## Mute log
+noboxout-orm use noboxout-log, simply:
+
+```js
+    require("noboxout-orm").Norm.logMute = true
+```
+
+To adjust the level
+
+```js
+    require("noboxout-orm").Norm.logLevel = 4; // all
+    require("noboxout-orm").Norm.logLevel = 3; // no verbose
+    require("noboxout-orm").Norm.logLevel = 2; // no verbose, debug
+    require("noboxout-orm").Norm.logLevel = 1; // no verbose, debug, warn
+    require("noboxout-orm").Norm.logLevel = 0; // no verbose, debug, warn, error
 ```
 
 
