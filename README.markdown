@@ -144,15 +144,15 @@ User.hasMany(User, {property: "mentors", foreignKey: "mentor_id", refProperty: "
 ```
 
 
-## Mute log
-noboxout-orm use noboxout-log, simply:
+## Log
+noboxout-orm use noboxout-log.
 
+Mute log
 ```js
     require("noboxout-orm").Norm.logMute = true
 ```
 
-To adjust the level
-
+Adjust verbosity
 ```js
     require("noboxout-orm").Norm.logLevel = 4; // all
     require("noboxout-orm").Norm.logLevel = 3; // no verbose
