@@ -109,11 +109,11 @@ module.exports = function (test, con) {
 
             t.equal(tag.id, null, "id is null");
             t.equal(tag.name, null, "name is null");
-            t.equal(tag.$dirty, false, "dirty is null");
+            t.equal(tag.$norm.dirty, false, "dirty is null");
 
             tag.name = "test";
             t.equal(tag.name, "test", "name is null");
-            t.equal(tag.$dirty, true, "dirty is null");
+            t.equal(tag.$norm.dirty, true, "dirty is null");
 
             t.equal(tag.$data.name, "test", "data.name is null");
 
@@ -137,11 +137,11 @@ module.exports = function (test, con) {
 
         t.equal(tag.id, null, "id is null");
         t.equal(tag.name, null, "name is null");
-        t.equal(tag.$dirty, false, "dirty is null");
+        t.equal(tag.$norm.dirty, false, "dirty is null");
 
         tag.name = "test";
         t.equal(tag.name, "test", "name is null");
-        t.equal(tag.$dirty, true, "dirty is null");
+        t.equal(tag.$norm.dirty, true, "dirty is null");
 
         t.equal(tag.$data.name, "test", "data.name is null");
 
