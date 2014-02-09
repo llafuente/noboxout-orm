@@ -46,8 +46,7 @@ function run_tests(test, norm, con) {
     });
 
 
-    test
-    ("get user side", function (t) {
+    test("get user side", function (t) {
 
         Models.User.$get(1, {eager: true}).queryOne(con, function (err, user) {
             t.ok(user.id !== null, "user stored correctly");
@@ -79,7 +78,7 @@ function run_tests(test, norm, con) {
     test("get session side", function (t) {
         Models.User.$get(1).queryOne(con, function (err, user) {
             user.login = "edited";
-            user.$store(function() {
+            user.$store(function () {
                 t.end();
             });
         });
@@ -97,7 +96,7 @@ function run_tests(test, norm, con) {
     });
 
     test("fixtures", function (t) {
-        var next = Fun.after(function() {t.end();}, 3);
+        var next = Fun.after(function () { t.end(); }, 3);
 
         var admin = Models.User.$create(con);
         admin.login = "admin";
@@ -128,35 +127,10 @@ function run_tests(test, norm, con) {
     });
 
     test("end the process", function (t) {
-        setTimeout(function () { process.exit() ; }, 500);
+        setTimeout(function () { process.exit(); }, 500);
         t.end();
     });
 }
 
 
-(function () {
-    "use strict";
-    require("ass");
-
-    var util = require("util"),
-        norm = require("../index.js").Norm,
-        tap = require("tap"),
-        test = tap.test;
-
-    norm.setup({
-        mysql: {
-            host     : "127.0.0.1",
-            user     : "root",
-            password : "toor",
-            database: "norm"
-        }
-    });
-
-    test("reserve a connection", function (t) {
-        norm.reserve(function(err, con) {
-            run_tests(test, norm, con);
-            t.end();
-        });
-    });
-
-}());
+require("./test-common.js")(run_tests);

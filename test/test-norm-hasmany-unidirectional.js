@@ -96,7 +96,7 @@ function run_tests(test, norm, con) {
         });
     }
     test("get student and attach mentors", function (t) {
-        Models.User.$find({login: "Math Master"}).queryOne(con, function(err, teacher) {
+        Models.User.$find({login: "Math Master"}).queryOne(con, function (err, teacher) {
             t.equal(teacher.login, "Math Master", "Math!");
 
             t.end();
@@ -149,31 +149,4 @@ function run_tests(test, norm, con) {
 
 }
 
-(function () {
-    "use strict";
-    require("ass");
-
-    var util = require("util"),
-        norm = require("../index.js").Norm,
-        tap = require("tap"),
-        test = tap.test;
-
-
-    norm.setup({
-        mysql: {
-            host     : '127.0.0.1',
-            user     : 'root',
-            password : 'toor',
-            database: "norm"
-        }
-    });
-
-    test("reserve a connection", function (t) {
-        norm.reserve(function(err, con) {
-            run_tests(test, norm, con)
-            t.end();
-        });
-    });
-}());
-
-
+require("./test-common.js")(run_tests);

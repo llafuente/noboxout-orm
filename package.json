@@ -38,7 +38,8 @@
     "object-enhancements": "*",
     "node-class": "*",
     "colors" : "*",
-    "mysql" : "*"
+    "mysql" : "*",
+    "memcached" : "*"
   },
   "devDependencies": {
     "tap": "~0.4.4",
