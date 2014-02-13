@@ -10,9 +10,9 @@ module.exports = function (run_tests) {
     norm.setup({
         mysql: {
             host     : "127.0.0.1",
-            user     : "root",
-            password : "toor",
-            database: "norm"
+            user     : "travis",
+            password : "",
+            database: "norm_test"
         },
         memcached: {
             host: "127.0.0.1",

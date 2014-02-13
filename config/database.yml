@@ -1,0 +1,4 @@
+test:
+  database: norm_test
+  username: travis
+  encoding: utf8
