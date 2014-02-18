@@ -15,5 +15,6 @@
     module.exports.DBA = require("./lib/dba.js");
     module.exports.Norm = require("./lib/norm.js");
     module.exports.Entity = require("./lib/entity.js");
+    module.exports.Query = require("./lib/query.js");
 
 }());

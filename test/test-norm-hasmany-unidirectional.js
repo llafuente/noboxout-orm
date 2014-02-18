@@ -62,7 +62,10 @@ function run_tests(test, norm, con) {
 
                     user.$store(function () {
                         t.equal(user.mentors.length, 2, "has two mentors");
-                        t.end();
+                        Models.User.$get(3, {eager: true}).queryOne(con, function (err, student) {
+                            t.equal(user.mentors.length, student.mentors.length, "has two mentors");
+                            t.end();
+                        });
                     });
                 });
             });
@@ -73,6 +76,8 @@ function run_tests(test, norm, con) {
     while (i--) {
         test("remove test" + i, function (t) {
             Models.User.$get(3, {eager: true}).queryOne(con, function (err, student) {
+                t.ok(student.mentors.length > 0, "has at least one mentors");
+console.log(student);
                 var removed_mentor = student.mentors[0];
                 var l = student.mentors.length;
                 student.removeMentors(removed_mentor);

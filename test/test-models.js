@@ -187,7 +187,7 @@ module.exports = function (test, con) {
         t.end();
     });
 
-    test("norm hasOne", function (t) {
+    test("create table", function (t) {
         var i,
             creates = [],
             alters = [],
