@@ -44,33 +44,9 @@ function run_tests(test, norm, con) {
     });
 
     test("delete tables", function (t) {
-        var deleteAll = Fun.after(function () {
-                t.end();
-            }, 2);
-
-        con.query(dba.dropTable("test_a"), deleteAll);
-        con.query(dba.dropTable("test_b"), deleteAll);
-    });
-
-
-    test("create tables", function (t) {
-        var i,
-            creates = [],
-            alters = [],
-            x;
-
-        for (i in entities) {
-            x = entities[i].$createTable();
-            creates.push(x[0]);
-            array.combine(alters, x[1]);
-        }
-
-        array.combine(creates, alters);
-
-        con.querys(creates, function () {
+        norm.sync(function () {
             t.end();
         });
-
     });
 
     test("fixtures", function (t) {
@@ -98,10 +74,8 @@ function run_tests(test, norm, con) {
 
                 aaa.go = bbb;
                 aaa.$store(con, function() {
-                    /* TODO
                     t.equal(aaa.tb_id, 1, "tb_id is set");
                     t.equal(aaa.$db.tb_id, 1, "tb_id is set");
-                    */
                     t.end();
                 });
             });

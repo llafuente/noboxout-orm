@@ -149,18 +149,6 @@ module.exports = function (test, con) {
     });
 
 
-    test("drop tables", function (t) {
-
-        var deleteAll = fun.after(function () {
-            t.end();
-        });
-
-        con.query(dba.dropTable("users"), deleteAll);
-        con.query(dba.dropTable("tags"), deleteAll);
-        con.query(dba.dropTable("session"), deleteAll);
-    });
-
-
     test("check models", function (t) {
         t.ok(norm.models.Tag !== undefined);
         t.equal(Tag.$table.fields.length, 4); // create_at + updated_at
@@ -187,21 +175,8 @@ module.exports = function (test, con) {
         t.end();
     });
 
-    test("create table", function (t) {
-        var i,
-            creates = [],
-            alters = [],
-            x;
-
-        for (i in ret) {
-            x = ret[i].$createTable();
-            creates.push(x[0]);
-            array.combine(alters, x[1]);
-        }
-
-        array.combine(creates, alters);
-
-        con.querys(creates, function () {
+    test("delete/create tables", function (t) {
+        norm.sync(function () {
             t.end();
         });
     });
