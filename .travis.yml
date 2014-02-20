@@ -2,7 +2,9 @@ language: node_js
 node_js:
   - 0.8
   - 0.10
+before_script:
+  - mysql -e 'CREATE DATABASE norm_test CHARACTER SET utf8 COLLATE utf8_bin;'
 
 services:
   - memcached # will start memcached
-  - mysql -e 'CREATE DATABASE norm_test CHARACTER SET utf8 COLLATE utf8_bin;'
+  - mysql
