@@ -18,63 +18,130 @@ Transaction and coding style. No ORM has a good Classical inheritance but you ca
 
 Because you only need MYSQL and memcached. Because it's what we support.
 
+## Norm object
+
+norm = require("noboxout-orm").Norm;
+
+* setup(Object: configuration)
+
+```js
+  norm.setup({
+      mysql: {
+          host     : "127.0.0.1",
+          user     : "travis",
+          password : "",
+          database: "norm_test"
+      },
+      memcached: {
+          host: "127.0.0.1",
+          port: 11211,
+          config: {
+              poolSize: 25
+          }
+      }
+  });
+```
+
+* define(String entity_name, Object class_definition, Object table_definition)
+
+  Define a model.
+  All models are stored in **norm.models** with the given entity_name (case-sensitive)
+  All table definitions are stored are **norm.tables**
+
+* reserve(callback(Error err, Connection con))
+
+  Reserve a new connection to database and memcached
+
+  If you are working on a HTTP server environment, this should be call at the beginning of a request.
+
+* release(Connection con)
+
+  Release given connection
+
+* sync
+
+  Synchronize database schema, *DROPPING EVERYTHING FIRST*, there is no incremental sync (and no plans)
+
 ## Define models
 
 Let's start!
 
 ```js
 
-    var Country,
-        Session,
-        User;
-
-    Country = norm.define("Country", {
-        id: norm.Number.LENGTH(10).UNSIGNED,
-        iso2: norm.String.LENGTH(2).NOTNULL,
-
-        // this is the constructor.
-        // if declared, need to call this.__parent()
-        initialize: function () {
-            this.__parent();
-        }
-    }, {
-        // NOTE!!
-        // Norm has column prefix.
-        // It's highly recompensed to avoid collisions, norm didn't handle collisions (maybe never will)
-        prefix: "cn_",
-
-        // tableName is the Class name lowercased by default
-        tableName: "countries"
-
-        // primaryKey is "id" by default
-    });
-
-    Session = norm.define("Session", {
-        id: norm.Number.LENGTH(10).UNSIGNED,
-        start_date: norm.Date.NOTNULL,
-        initialize: function () {
-            this.__parent();
-        }
-    }, {
-        prefix: "sess_",
-        tableName: "sessions"
-    });
+    var User;
 
     User = norm.define("User", {
         id: norm.Number.LENGTH(10).UNSIGNED,
         login: norm.String.LENGTH(100),
-        pwd: norm.String.LENGTH(52),
+        // sha1 in binary
+        password: norm.String.Binary(64),
         email: norm.String.LENGTH(255),
-        initialize: function () {
-            this.__parent();
+
+        // you can define more properties that wont be mapped
+        online: true,
+
+        // this is the constructor.
+        // if declared, remember to call this.__parent(data)
+        initialize: function (data) {
+            this.__parent(data);
+
+            // do your staff
         }
     }, {
+        // NOTE!!
+        // Norm has column prefix.
+        // It's highly recommended to avoid collisions
+        // norm didn't handle collisions (maybe never will)
         prefix: "user_",
+
+        // tableName is the Class name lowercased by default
         tableName: "users"
+
+        // primaryKey is "id" by default
     });
 
 
 ```
+
+**TYPES**
+
+* In common for all
+  NOTNULL
+  DEFAULT(mixed)
+  UNIQUE
+  COMMENTS(string)
+  GROUPS(array of strings)
+
+* Number
+  * UNSIGNED
+  * ZERIFILL
+  * LENGTH(number)
+
+* Decimal
+  * UNSIGNED
+  * ZERIFILL
+  * LENGTH(number)
+  * DECIMALS(number)
+
+* Enum
+  * CHARSET(string)
+  * COLLATION(string)
+  * VALUES(array of strings)
+
+* Date
+
+* String (0-255)
+  * CHARSET(string)
+  * COLLATION(string)
+  * LENGTH(number)
+
+* Text (255-...)
+  * CHARSET(string)
+  * COLLATION(string)
+
+* Binary
+  * LENGTH(number)
+
 
 ## Model/Entity functions
 
@@ -271,7 +338,8 @@ User.hasMany(User, {property: "mentors", foreignKey: "mentor_id", refProperty: "
 
 
 ## Log
-noboxout-orm use noboxout-log.
+
+noboxout-orm use noboxout-log. By default print Warning/Error (logLevel 2)
 
 Mute log
 ```js
