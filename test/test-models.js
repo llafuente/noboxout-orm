@@ -151,19 +151,19 @@ module.exports = function (test, con) {
 
     test("check models", function (t) {
         t.ok(norm.models.Tag !== undefined);
-        t.equal(Tag.$table.fields.length, 4); // create_at + updated_at
+        t.equal(Tag.$table.columns.length, 4); // create_at + updated_at
 
         t.ok(norm.models.Session !== undefined);
-        t.equal(Session.$table.fields.length, 4); // create_at + updated_at
+        t.equal(Session.$table.columns.length, 4); // create_at + updated_at
 
         t.ok(norm.models.User !== undefined);
-        t.equal(User.$table.fields.length, 8); // create_at + updated_at
+        t.equal(User.$table.columns.length, 8); // create_at + updated_at
 
-        t.equal(User.$table.fields.indexOf("tag_id") !== -1, true, "has user_perm_id field");
+        t.equal(User.$table.columns.indexOf("tag_id") !== -1, true, "has user_perm_id field");
         t.equal(User.$table.structure.tag_id.$dbtype, "integer", "fk is an integer");
         t.equal(User.prototype.main_tag !== undefined, true, "fk is an integer");
 
-        t.equal(User.$table.fields.indexOf("sess_id") !== -1, true, "has user_perm_id field");
+        t.equal(User.$table.columns.indexOf("sess_id") !== -1, true, "has user_perm_id field");
         t.equal(User.$table.structure.sess_id.$dbtype, "integer", "fk is an integer");
         t.equal(User.prototype.session, null, "session property is null");
 
