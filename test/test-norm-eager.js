@@ -69,7 +69,7 @@ function run_tests(test, norm, con) {
     });
 
     test("get without eager and save", function (t) {
-        Models.User.$get(user_id, {eager: false}).queryOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: false}).execOne(con, function(err, user) {
             console.log(user);
             user.login = "modified!";
             t.ok(user.main_tag == null, "didn't retrieve main_tag");
@@ -82,7 +82,7 @@ function run_tests(test, norm, con) {
     });
 
     test("get with eager should have a main_tag!", function (t) {
-        Models.User.$get(user_id, {eager: true}).queryOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: true}).execOne(con, function(err, user) {
             console.log(user);
             t.ok(user.main_tag !== null, "has main_tag");
             t.equal(user.main_tag.name, "user", "main_tag is user");
@@ -91,7 +91,7 @@ function run_tests(test, norm, con) {
     });
 
     test("remove tag without eager", function (t) {
-        Models.User.$get(user_id, {eager: false}).queryOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: false}).execOne(con, function(err, user) {
             console.log(user);
             user.main_tag = false;
             user.$store(function() {
@@ -101,10 +101,10 @@ function run_tests(test, norm, con) {
     });
 
     test("main_tag removed & re-added", function (t) {
-        Models.User.$get(user_id, {eager: true}).queryOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: true}).execOne(con, function(err, user) {
             console.log(user);
             t.ok(user.main_tag == null, "main_tag removed");
-            Models.Tag.$get(tag_user_id, {eager: false}).queryOne(con, function(err, tag) {
+            Models.Tag.$get(tag_user_id, {eager: false}).execOne(con, function(err, tag) {
                 user.main_tag = tag;
                 user.$store();
                 t.end();
@@ -113,7 +113,7 @@ function run_tests(test, norm, con) {
     });
 
     test("user eager + fetch session", function (t) {
-        Models.User.$get(user_id, {eager: true}).queryOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: true}).execOne(con, function(err, user) {
             t.ok(user.main_tag != null, "main_tag retrieved");
             t.ok(user.session != null, "session retrieved");
 
@@ -126,7 +126,7 @@ function run_tests(test, norm, con) {
 
         /*
     test("user no eager + fetch", function (t) {
-        Models.User.$get(user_id, {eager: false}).queryOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: false}).execOne(con, function(err, user) {
             user.$fetch(function() {
                 t.ok(user.main_tag != null, "main_tag retrieved");
                 t.ok(user.session != null, "session retrieved");
