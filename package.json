@@ -39,7 +39,8 @@
     "node-class": "*",
     "colors" : "*",
     "mysql" : "*",
-    "memcached" : "*"
+    "memcached" : "*",
+    "bson" : "*"
   },
   "devDependencies": {
     "tap": "~0.4.4",
