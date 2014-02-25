@@ -48,7 +48,7 @@ function run_tests(test, norm, con) {
             t.equal(con.stats.cachemiss, stats.cachemiss + 1);
 
             console.log(user);
-            t.ok(user.id !== null)
+            t.ok(user.id !== null);
             t.end();
         });
     });
@@ -61,7 +61,7 @@ function run_tests(test, norm, con) {
             t.equal(con.stats.cachemiss, stats.cachemiss + 1);
 
             console.log(user);
-            t.ok(user.id !== null)
+            t.ok(user.id !== null);
             t.end();
         });
     });

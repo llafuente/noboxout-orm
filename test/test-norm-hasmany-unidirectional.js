@@ -77,7 +77,7 @@ function run_tests(test, norm, con) {
         test("remove test" + i, function (t) {
             Models.User.$get(3, {eager: true}).execOne(con, function (err, student) {
                 t.ok(student.mentors.length > 0, "has at least one mentors");
-console.log(student);
+
                 var removed_mentor = student.mentors[0];
                 var l = student.mentors.length;
                 student.removeMentors(removed_mentor);

@@ -2,7 +2,6 @@ module.exports = function (test, con) {
     "use strict";
 
     var norm = require("../index.js").Norm,
-        dba =  require("../index.js").DBA,
         object = require("object-enhancements"),
         array = require("array-enhancements"),
         fun = require("function-enhancements"),

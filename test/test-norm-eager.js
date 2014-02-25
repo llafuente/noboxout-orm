@@ -10,7 +10,7 @@ function run_tests(test, norm, con) {
         tag_user_id;
 
     test("fixtures", function (t) {
-        var finish = Fun.after(function() {
+        var finish = Fun.after(function () {
                 user_id = user.id;
                 tag_user_id = user_tag.id;
 
@@ -24,10 +24,10 @@ function run_tests(test, norm, con) {
             admin,
             student;
 
-        user_session = Models.Session.$create(con)
+        user_session = Models.Session.$create(con);
         user_session.start_date = new Date();
 
-        user_tag = Models.Tag.$create(con)
+        user_tag = Models.Tag.$create(con);
         user_tag.name = "user";
 
         user = Models.User.$create(con);
@@ -37,22 +37,22 @@ function run_tests(test, norm, con) {
         user.session = user_session;
 
 
-        user_tag.on("post:store", function() {
+        user_tag.on("post:store", function () {
             console.log("** user-tag stored!");
         });
-        user.on("post:store", function() {
+        user.on("post:store", function () {
             console.log("** user stored!");
         });
 
-        user_tag.on("pre:insert", function() {
+        user_tag.on("pre:insert", function () {
             console.log("** user insert!");
         });
-        user.on("pre:insert", function() {
+        user.on("pre:insert", function () {
             console.log("** user insert!");
         });
 
         user.$store(finish);
-        admin_tag = Models.Tag.$create(con)
+        admin_tag = Models.Tag.$create(con);
         admin_tag.name = "admin";
 
         admin = Models.User.$create(con);
@@ -69,20 +69,20 @@ function run_tests(test, norm, con) {
     });
 
     test("get without eager and save", function (t) {
-        Models.User.$get(user_id, {eager: false}).execOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: false}).execOne(con, function (err, user) {
             console.log(user);
             user.login = "modified!";
             t.ok(user.main_tag == null, "didn't retrieve main_tag");
             t.ok(user.session == null, "didn't retrieve session");
 
-            user.$store(function() {
+            user.$store(function () {
                 t.end();
             });
         });
     });
 
     test("get with eager should have a main_tag!", function (t) {
-        Models.User.$get(user_id, {eager: true}).execOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: true}).execOne(con, function (err, user) {
             console.log(user);
             t.ok(user.main_tag !== null, "has main_tag");
             t.equal(user.main_tag.name, "user", "main_tag is user");
@@ -91,20 +91,20 @@ function run_tests(test, norm, con) {
     });
 
     test("remove tag without eager", function (t) {
-        Models.User.$get(user_id, {eager: false}).execOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: false}).execOne(con, function (err, user) {
             console.log(user);
             user.main_tag = false;
-            user.$store(function() {
+            user.$store(function () {
                 t.end();
             });
         });
     });
 
     test("main_tag removed & re-added", function (t) {
-        Models.User.$get(user_id, {eager: true}).execOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: true}).execOne(con, function (err, user) {
             console.log(user);
             t.ok(user.main_tag == null, "main_tag removed");
-            Models.Tag.$get(tag_user_id, {eager: false}).execOne(con, function(err, tag) {
+            Models.Tag.$get(tag_user_id, {eager: false}).execOne(con, function (err, tag) {
                 user.main_tag = tag;
                 user.$store();
                 t.end();
@@ -113,11 +113,11 @@ function run_tests(test, norm, con) {
     });
 
     test("user eager + fetch session", function (t) {
-        Models.User.$get(user_id, {eager: true}).execOne(con, function(err, user) {
+        Models.User.$get(user_id, {eager: true}).execOne(con, function (err, user) {
             t.ok(user.main_tag != null, "main_tag retrieved");
             t.ok(user.session != null, "session retrieved");
 
-            user.session.$fetch(function() {
+            user.session.$fetch(function () {
                 t.ok(user.session.owner != null, "main_tag has owner");
                 t.end();
             });

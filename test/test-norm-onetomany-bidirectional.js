@@ -1,9 +1,7 @@
 function run_tests(test, norm, con) {
     "use strict";
-    var Models,
-        Fun = require("function-enhancements"),
+    var Fun = require("function-enhancements"),
         array = require("array-enhancements"),
-        dba =  require("../index.js").DBA,
         A,
         B,
         entities;
@@ -50,17 +48,17 @@ function run_tests(test, norm, con) {
     });
 
     test("fixtures", function (t) {
-        var end_test = Fun.after(function() {
+        var end_test = Fun.after(function () {
                 t.end();
             }, 9);
 
-        [1,2,3,4,5,6,7,8,9].forEach(function(i) {
+        [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function (i) {
             var a = A.$create();
             a.a_name = "A-test-" + i;
             a.$store(con, end_test);
         });
 
-        [1,2,3,4,5,6,7,8,9].forEach(function(i) {
+        [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function (i) {
             var b = B.$create();
             b.b_name = "B-test-" + i;
             b.$store(con, end_test);
@@ -69,14 +67,14 @@ function run_tests(test, norm, con) {
     });
 
     test("simple attach", function (t) {
-        A.$get(1).execOne(con, function(err, a) {
-            B.$get(1).execOne(con, function(err, b1) {
-                B.$get(2).execOne(con, function(err, b2) {
+        A.$get(1).execOne(con, function (err, a) {
+            B.$get(1).execOne(con, function (err, b1) {
+                B.$get(2).execOne(con, function (err, b2) {
 
                     a.addGo(b1);
                     a.addGo(b2);
 
-                    a.$store(con, function() {
+                    a.$store(con, function () {
                         t.equal(b1.ta_id, 1, "tb_id is set");
                         t.equal(b1.$db.ta_id, 1, "tb_id is set");
 
@@ -91,7 +89,7 @@ function run_tests(test, norm, con) {
     });
     
     test("test attachment eager", function (t) {
-        A.$get(1, {eager: true}).execOne(con, function(err, entity) {
+        A.$get(1, {eager: true}).execOne(con, function (err, entity) {
 
 
             t.ok(entity.go != null, "go != null");
@@ -104,8 +102,8 @@ function run_tests(test, norm, con) {
 
 
     test("test attachment fetch", function (t) {
-        A.$get(1, {eager: false}).execOne(con, function(err, entity) {
-            entity.$fetch(function() {
+        A.$get(1, {eager: false}).execOne(con, function (err, entity) {
+            entity.$fetch(function () {
                 t.ok(entity.go != null, "go != null");
                 t.equal(entity.go.length, 2, "go is an array with length");
                 t.equal(entity.go[0].id, 1, "first one is 1");
@@ -116,10 +114,10 @@ function run_tests(test, norm, con) {
     });
 
     test("simple remove", function (t) {
-        A.$get(1, {eager: true}).execOne(con, function(err, entity) {
+        A.$get(1, {eager: true}).execOne(con, function (err, entity) {
             var b = entity.go[1];
             entity.removeGo(entity.go[1]);
-            b.$store(con, function() {
+            b.$store(con, function () {
                 t.end();
             });
 
@@ -127,8 +125,8 @@ function run_tests(test, norm, con) {
     });
 
     test("test attachment fetch", function (t) {
-        A.$get(1, {eager: false}).execOne(con, function(err, entity) {
-            entity.$fetch(function() {
+        A.$get(1, {eager: false}).execOne(con, function (err, entity) {
+            entity.$fetch(function () {
                 t.ok(entity.go != null, "go != null");
                 t.equal(entity.go.length, 1, "go is an array with length");
                 t.equal(entity.go[0].id, 1, "first one is 1");
@@ -140,7 +138,7 @@ function run_tests(test, norm, con) {
     test("test back fetch", function (t) {
         norm.logLevel = 6;
 
-        B.$get(1, {eager: true}).execOne(con, function(err, entity) {
+        B.$get(1, {eager: true}).execOne(con, function (err, entity) {
             console.log(entity);
 
             t.ok(entity.back != null, "has oneToOne relation");

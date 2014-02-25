@@ -24,7 +24,7 @@ module.exports = function (run_tests) {
     });
 
     test("reserve a connection", function (t) {
-        norm.reserve(function(err, con) {
+        norm.reserve(function (err, con) {
             run_tests(test, norm, con);
             t.end();
         });
