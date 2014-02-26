@@ -1,5 +1,6 @@
 # noboxout-orm [![Build Status](https://secure.travis-ci.org/llafuente/noboxout-orm.png?branch=master)](http://travis-ci.org/llafuente/noboxout-orm)
 
+![NPM](https://nodei.co/npm/noboxout-orm.png?compact=true)
 
 ## Introduction
 
