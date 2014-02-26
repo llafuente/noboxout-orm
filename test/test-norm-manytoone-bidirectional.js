@@ -67,8 +67,8 @@ function run_tests(test, norm, con) {
     });
 
     test("simple attach", function (t) {
-        A.$get(1).execOne(con, function (err, aaa) {
-            B.$get(1).execOne(con, function (err, bbb) {
+        A.$get(1).exec(con, function (err, aaa) {
+            B.$get(1).exec(con, function (err, bbb) {
 
                 aaa.go = bbb;
                 aaa.$store(con, function () {
@@ -84,7 +84,7 @@ function run_tests(test, norm, con) {
     test("test attachment eager", function (t) {
         //console.log(require("util").inspect(A, {depth: 5}));
 
-        A.$get(1, {eager: true}).execOne(con, function (err, entity) {
+        A.$get(1, {eager: true}).exec(con, function (err, entity) {
             t.ok(entity.go != null, "has oneToOne relation");
             t.equal(entity.go.id, 1, "has oneToOne relation");
             t.end();
@@ -96,10 +96,8 @@ function run_tests(test, norm, con) {
         //console.log(require("util").inspect(A, {depth: 5}));
 
 
-        A.$get(1, {eager: false}).execOne(con, function (err, entity) {
-            console.log(entity);
+        A.$get(1, {eager: false}).exec(con, function (err, entity) {
             entity.$fetch(function () {
-                console.log(entity);
                 t.ok(entity.go != null, "has oneToOne relation");
                 t.equal(entity.go.id, 1, "has oneToOne relation");
                 t.end();
@@ -108,7 +106,7 @@ function run_tests(test, norm, con) {
     });
 
     test("simple remove", function (t) {
-        A.$get(1).execOne(con, function (err, aaa) {
+        A.$get(1).exec(con, function (err, aaa) {
             aaa.go = false; // false it's used in case of eager:false
             aaa.$store(con, function () {
                 t.end();
@@ -120,15 +118,15 @@ function run_tests(test, norm, con) {
     test("test attachment eager", function (t) {
         //console.log(require("util").inspect(A, {depth: 5}));
 
-        A.$get(1, {eager: true}).execOne(con, function (err, entity) {
+        A.$get(1, {eager: true}).exec(con, function (err, entity) {
             t.ok(entity.go == null, "has no relation");
             t.end();
         });
     });
 
     test("simple attach", function (t) {
-        A.$get(1).execOne(con, function (err, aaa) {
-            B.$get(1).execOne(con, function (err, bbb) {
+        A.$get(1).exec(con, function (err, aaa) {
+            B.$get(1).exec(con, function (err, bbb) {
 
                 aaa.go = bbb;
                 aaa.$store(con, function () {
@@ -140,8 +138,8 @@ function run_tests(test, norm, con) {
     });
 
     test("simple attach", function (t) {
-        A.$get(1).execOne(con, function (err, aaa) {
-            B.$get(2).execOne(con, function (err, bbb) {
+        A.$get(1).exec(con, function (err, aaa) {
+            B.$get(2).exec(con, function (err, bbb) {
 
                 aaa.go = bbb;
                 aaa.$store(con, function () {
@@ -158,9 +156,9 @@ function run_tests(test, norm, con) {
                 t.end();
             }, 2);
 
-        A.$get(1).execOne(con, function (err, aaa1) {
-            A.$get(2).execOne(con, function (err, aaa2) {
-                B.$get(1).execOne(con, function (err, bbb) {
+        A.$get(1).exec(con, function (err, aaa1) {
+            A.$get(2).exec(con, function (err, aaa2) {
+                B.$get(1).exec(con, function (err, bbb) {
                     t.equal(aaa1.id, 1);
                     t.equal(aaa2.id, 2);
 
@@ -178,7 +176,7 @@ function run_tests(test, norm, con) {
     test("test back eager", function (t) {
         //console.log(require("util").inspect(A, {depth: 5}));
 
-        B.$get(1, {eager: true}).execOne(con, function(err, entity) {
+        B.$get(1, {eager: true}).exec(con, function(err, entity) {
             console.log(entity);
             process.exit();
             t.ok(entity.back != null, "has oneToOne relation");
@@ -193,7 +191,7 @@ function run_tests(test, norm, con) {
     test("test back fetch", function (t) {
         //console.log(require("util").inspect(A, {depth: 5}));
 
-        B.$get(1, {eager: false}).execOne(con, function (err, entity) {
+        B.$get(1, {eager: false}).exec(con, function (err, entity) {
             entity.$fetch(function () {
                 t.ok(entity.back != null, "has oneToOne relation");
                 t.equal(entity.back.length, 2, "has oneToOne relation");

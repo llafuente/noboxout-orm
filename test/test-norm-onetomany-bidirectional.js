@@ -67,9 +67,9 @@ function run_tests(test, norm, con) {
     });
 
     test("simple attach", function (t) {
-        A.$get(1).execOne(con, function (err, a) {
-            B.$get(1).execOne(con, function (err, b1) {
-                B.$get(2).execOne(con, function (err, b2) {
+        A.$get(1).exec(con, function (err, a) {
+            B.$get(1).exec(con, function (err, b1) {
+                B.$get(2).exec(con, function (err, b2) {
 
                     a.addGo(b1);
                     a.addGo(b2);
@@ -89,7 +89,7 @@ function run_tests(test, norm, con) {
     });
     
     test("test attachment eager", function (t) {
-        A.$get(1, {eager: true}).execOne(con, function (err, entity) {
+        A.$get(1, {eager: true}).exec(con, function (err, entity) {
 
 
             t.ok(entity.go != null, "go != null");
@@ -102,7 +102,8 @@ function run_tests(test, norm, con) {
 
 
     test("test attachment fetch", function (t) {
-        A.$get(1, {eager: false}).execOne(con, function (err, entity) {
+        A.$get(1, {eager: false}).exec(con, function (err, entity) {
+
             entity.$fetch(function () {
                 t.ok(entity.go != null, "go != null");
                 t.equal(entity.go.length, 2, "go is an array with length");
@@ -114,7 +115,7 @@ function run_tests(test, norm, con) {
     });
 
     test("simple remove", function (t) {
-        A.$get(1, {eager: true}).execOne(con, function (err, entity) {
+        A.$get(1, {eager: true}).exec(con, function (err, entity) {
             var b = entity.go[1];
             entity.removeGo(entity.go[1]);
             b.$store(con, function () {
@@ -125,7 +126,7 @@ function run_tests(test, norm, con) {
     });
 
     test("test attachment fetch", function (t) {
-        A.$get(1, {eager: false}).execOne(con, function (err, entity) {
+        A.$get(1, {eager: false}).exec(con, function (err, entity) {
             entity.$fetch(function () {
                 t.ok(entity.go != null, "go != null");
                 t.equal(entity.go.length, 1, "go is an array with length");
@@ -138,7 +139,7 @@ function run_tests(test, norm, con) {
     test("test back fetch", function (t) {
         norm.logLevel = 6;
 
-        B.$get(1, {eager: true}).execOne(con, function (err, entity) {
+        B.$get(1, {eager: true}).exec(con, function (err, entity) {
             console.log(entity);
 
             t.ok(entity.back != null, "has oneToOne relation");

@@ -37,7 +37,7 @@ function run_tests(test, norm, con) {
         admin2.login = "admin2";
         admin2.email = "admin2@admin.com";
 
-        Models.Tag.$get(1).execOne(con, function (err, tag) {
+        Models.Tag.$get(1).exec(con, function (err, tag) {
 
             t.ok(tag !== null, "tag found");
             t.ok(tag.id !== null, "tag has id");
@@ -48,7 +48,7 @@ function run_tests(test, norm, con) {
                 t.ok(admin2.id !== null, "user is saved");
                 t.ok(admin2.main_tag.tag_id !== null, "tag_id is not null -> saved");
 
-                Models.User.$get(admin2.id, {eager: true}).execOne(con, function (err, user, raw) {
+                Models.User.$get(admin2.id, {eager: true}).exec(con, function (err, user, raw) {
                     t.ok(user !== null, "there is a user");
                     t.ok(user.id !== null, "has id");
                     t.ok(user.main_tag !== null, "has main_tag");
@@ -74,7 +74,7 @@ function run_tests(test, norm, con) {
             t.ok(admin.main_tag.tag_id !== null, "tag_id is not null -> saved");
             t.ok(tag.tag_id !== null, "tag_id is not null -> saved");
 
-            Models.User.$get(admin.id, {eager: true}).execOne(con, function (err, user, raw) {
+            Models.User.$get(admin.id, {eager: true}).exec(con, function (err, user, raw) {
                 t.ok(user.id !== null, "user is saved");
                 t.doesNotThrow(function () {
                     t.ok(user.main_tag.tag_id !== null, "tag_id is not null -> saved");

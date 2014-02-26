@@ -42,7 +42,7 @@ function run_tests(test, norm, con) {
     test("retrieve user1", function (t) {
         stats = object.clone(con.stats);
 
-        Models.User.$get(1, {eager: false}).execOne(con, function (err, user) {
+        Models.User.$get(1, {eager: false}).exec(con, function (err, user) {
             t.equal(con.stats.query, stats.query + 1);
             t.equal(con.stats.cachehit, stats.cachehit);
             t.equal(con.stats.cachemiss, stats.cachemiss + 1);
@@ -55,7 +55,7 @@ function run_tests(test, norm, con) {
 // echo -e "set xUser:1 xxx\nquit" | nc localhost 11211;
 // echo -e "get xUser:1\nquit" | nc localhost 11211;
     test("retrieve again user1", function (t) {
-        Models.User.$get(1, {eager: false}).execOne(con, function (err, user) {
+        Models.User.$get(1, {eager: false}).exec(con, function (err, user) {
             t.equal(con.stats.query, stats.query + 1);
             t.equal(con.stats.cachehit, stats.cachehit + 1);
             t.equal(con.stats.cachemiss, stats.cachemiss + 1);
