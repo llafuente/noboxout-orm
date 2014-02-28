@@ -1,7 +1,8 @@
 function run_tests(test, norm, con) {
     "use strict";
     var Models,
-        Fun = require("function-enhancements");
+        Fun = require("function-enhancements"),
+        Work = require("../index.js").Work;
 
 
     Models = require("./test-models.js")(test, con);
@@ -10,13 +11,9 @@ function run_tests(test, norm, con) {
         tag_user_id;
 
     test("fixtures", function (t) {
-        var finish = Fun.after(function () {
-                user_id = user.id;
-                tag_user_id = user_tag.id;
+        norm.logLevel = 5;
 
-                t.end();
-            }, 3),
-
+        var work = new Work(),
             admin_tag,
             user_session,
             user_tag,
@@ -51,7 +48,7 @@ function run_tests(test, norm, con) {
             console.log("** user insert!");
         });
 
-        user.$store(finish);
+        user.$store({}, work);
         admin_tag = Models.Tag.$create(con);
         admin_tag.name = "admin";
 
@@ -59,23 +56,33 @@ function run_tests(test, norm, con) {
         admin.login = "admin";
         admin.email = "admin@web.com";
         admin.main_tag = admin_tag;
-        admin.$store(finish);
+        admin.$store({}, work);
 
         student = Models.User.$create(con);
         student.login = "student";
         student.email = "student@web.com";
         student.addMentors(admin);
-        student.$store(finish);
+        student.$store({}, work);
+
+        work.exec(con, function () {
+            user_id = user.id;
+            tag_user_id = user_tag.id;
+
+            t.end();
+        });
     });
 
     test("get without eager and save", function (t) {
-        Models.User.$get(user_id, {eager: false}).exec(con, function (err, user) {
-            console.log(user);
+        Models.User
+        .$get(user_id, {
+            eager: false
+        })
+        .exec(con, function (err, user) {
             user.login = "modified!";
             t.ok(user.main_tag == null, "didn't retrieve main_tag");
             t.ok(user.session == null, "didn't retrieve session");
 
-            user.$store(function () {
+            user.$store().exec(con, function () {
                 t.end();
             });
         });
@@ -94,7 +101,7 @@ function run_tests(test, norm, con) {
         Models.User.$get(user_id, {eager: false}).exec(con, function (err, user) {
             console.log(user);
             user.main_tag = false;
-            user.$store(function () {
+            user.$store().exec(con, function () {
                 t.end();
             });
         });
@@ -106,8 +113,9 @@ function run_tests(test, norm, con) {
             t.ok(user.main_tag == null, "main_tag removed");
             Models.Tag.$get(tag_user_id, {eager: false}).exec(con, function (err, tag) {
                 user.main_tag = tag;
-                user.$store();
-                t.end();
+                user.$store().exec(con, function() {
+                    t.end();
+                });
             });
         });
     });

@@ -152,6 +152,8 @@ Let's start!
 
   Create a new instance and assign a connection if passed.
 
+  Do not store your entity in database.
+
 * $unique(Array: columns, String: uq_name)
 
   Add a unique to definition
@@ -191,23 +193,23 @@ Let's start!
       true, all eager
 
 
-* $delete(String id_pk) -> Query
+* $delete(String id_pk) -> Work
 
   Build a **Query** to delete a single row in database given the primary key.
 
-* $find(Object: where) -> Query
+* $find(Object: where) -> Work
 
   Build a **Query** to retrieve any number of rows.
 
   SQL Where is created by keys as columns *equals* values as value
 
-* $search(String id_pk) -> Query
+* $search(String id_pk) -> Work
 
   Same as $find but treat Strings as LIKE-ABLE, to do a text search
 
   Notice that it could be slow...
 
-* $exists(String id_pk) -> Query
+* $exists(String id_pk) -> Work
 
   Perform a count to database (it's not cached!) to check if given primary key exists.
 
@@ -256,7 +258,7 @@ Let's start!
     false, no export relations
     Array, list of relations to be included.
 
-* $fetch (Array relations = null, Function callback)
+* $fetch (Array relations = null) -> Work
 
   retrieve relations.
 

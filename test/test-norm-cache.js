@@ -3,40 +3,47 @@ function run_tests(test, norm, con) {
     var Models,
         Fun = require("function-enhancements"),
         object = require("object-enhancements"),
+        Work = require("../index.js").Work,
         stats;
+
 
     Models = require("./test-models.js")(test, con);
 
     test("create user", function (t) {
+        norm.logLevel = 5;
+        
         var user1 = Models.User.$create(),
             user2 = Models.User.$create(),
             user3 = Models.User.$create(),
             user4 = Models.User.$create(),
             user5 = Models.User.$create(),
-            end_test = Fun.after(function () {
-                t.end();
-            }, 5);
+            work = new Work();
 
         user1.login = "user1";
         user1.email = "user1@test.com";
-        user1.$store(con, end_test);
+        user1.$store({}, work);
 
         user2.login = "user2";
         user2.email = "user2@test.com";
-        user2.$store(con, end_test);
+        user2.$store({}, work);
 
 
         user3.login = "user3";
         user3.email = "user3@test.com";
-        user3.$store(con, end_test);
+        user3.$store({}, work);
 
         user4.login = "user4";
         user4.email = "user4@test.com";
-        user4.$store(con, end_test);
+        user4.$store({}, work);
 
         user5.login = "user5";
         user5.email = "user5@test.com";
-        user5.$store(con, end_test);
+        user5.$store({}, work);
+
+
+        work.exec(con, function () {
+            t.end();
+        });
     });
 
     test("retrieve user1", function (t) {
