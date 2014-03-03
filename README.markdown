@@ -106,59 +106,63 @@ Let's start!
 
 **TYPES**
 
-* In common for all
-  NOTNULL
-  DEFAULT(mixed)
-  UNIQUE
-  COMMENTS(string)
-  GROUPS(array of strings)
+* Common for every type below.
+  * NOTNULL
+  * DEFAULT(Mixed)
+  * UNIQUE
+  * COMMENTS(String)
+  * GROUPS(Array of strings)
 
 * Number
   * UNSIGNED
   * ZERIFILL
-  * LENGTH(number)
+  * LENGTH(Number)
 
 * Decimal
   * UNSIGNED
   * ZERIFILL
-  * LENGTH(number)
-  * DECIMALS(number)
+  * LENGTH(Number)
+  * DECIMALS(Number)
 
 * Enum
-  * CHARSET(string)
-  * COLLATION(string)
-  * VALUES(array of strings)
+  * CHARSET(String)
+  * COLLATION(String)
+  * VALUES(Array of strings)
 
 * Date
 
-* String (0-255)
-  * CHARSET(string)
-  * COLLATION(string)
-  * LENGTH(number)
+* String
+  * CHARSET(String)
+  * COLLATION(String)
+  * LENGTH(Number[0-255])
 
-* Text (255-...)
-  * CHARSET(string)
-  * COLLATION(string)
+* Text
+  * CHARSET(String)
+  * COLLATION(String)
 
 * Binary
   * LENGTH(number)
+
+
+In future version we will let you setup and specific type like CHAR via DBTYPE(TYPE)
+This has some risk, so we avoid it in this current release.
 
 
 ## Model/Entity functions
 
 **At Entity level**
 
-* $create(Connection con = null)
+* $create(Connection con = null): Instance
 
   Create a new instance and assign a connection if passed.
 
   Do not store your entity in database.
 
-* $unique(Array: columns, String: uq_name)
+* $unique(Array: columns, String: uq_name): this
 
   Add a unique to definition
 
-* $hasOne(Entity target_entity, Object options)
+* $hasOne(Entity target_entity, Object options): this
 
   Add a relation to target_entity given options.
   With this method can be mapped:
@@ -174,7 +178,7 @@ Let's start!
     * *eager*: fetch relation in root by default? default: false
     * *refEager*: fetch relation target entity by default? default: false
 
-* $hasMany(Entity target_entity, Object options)
+* $hasMany(Entity target_entity, Object options) : this
 
   Add a relation to target_entity given options.
   With this method can be mapped:
@@ -182,36 +186,66 @@ Let's start!
 
   same options as above.
 
-* $get(String id_pk, Object options) -> Query
+
+* $get(String id_pk, Object options, Work work = null) -> Work
 
   Get Entity from cache/database.
+
+  If work is provided 'get' will be append it to it.
 
   options:
     * eager: Boolean|Undefined
       undefined, default behavior as defined in the model
       false, no eager
       true, all eager
+    * callback Function that will be called when get is finished
+    * name key in the result object
 
 
-* $delete(String id_pk) -> Work
+* $delete(String id_pk, Object options, Work work = null) -> Work
 
   Build a **Query** to delete a single row in database given the primary key.
 
-* $find(Object: where) -> Work
+  If work is provided 'delete' will be append it to it.
+
+  options:
+    * callback Function that will be called when delete is finished
+    * name key in the result object
+
+
+* $find(Object where, Object options, Work work = null) -> Work
 
   Build a **Query** to retrieve any number of rows.
 
   SQL Where is created by keys as columns *equals* values as value
 
-* $search(String id_pk) -> Work
+  If work is provided 'find' will be append it to it.
+
+  options:
+    * callback Function that will be called when find is finished
+    * name key in the result object
+
+* $search(String id_pk, Object options, Work work = null) -> Work
 
   Same as $find but treat Strings as LIKE-ABLE, to do a text search
 
   Notice that it could be slow...
 
-* $exists(String id_pk) -> Work
+  If work is provided 'search' will be append it to it.
+
+  options:
+    * callback Function that will be called when search is finished
+    * name key in the result object
+
+* $exists(String id_pk, Object options, Work work = null) -> Work
 
   Perform a count to database (it's not cached!) to check if given primary key exists.
+
+  If work is provided 'exists' will be append it to it.
+
+  options:
+    * callback Function that will be called when exists is finished
+    * name key in the result object
 
 * $export(Entity entity, Array group = []) -> Object
 
@@ -223,13 +257,15 @@ Let's start!
 
   Should not be used directly, use the instance method $export, that will call this
 
+
 * $exportRelation(Entity: entity, Relation: rel, array:group = []) -> Object
-  
+
   Export given relation, by default loop every item and do $export.
 
   Override this method to have custom behaviors.
 
   Should not be used directly, use the instance method $export, that will call this
+
 
 * $createTable -> String
 
@@ -258,13 +294,15 @@ Let's start!
     false, no export relations
     Array, list of relations to be included.
 
-* $fetch (Array relations = null) -> Work
+* $fetch ([Array relations = null,] Function callback) -> Work
 
-  retrieve relations.
+  Retrieve relations.
 
   relations
-    relations null, all
-    relations array, list of them to be included.
+    null, retrieve all relations
+    Array, white-list of relation to be fetched.
+
+  Note $fetch does not receive/return a work, a callback must be provided.
 
 
 ## <a name="defining-relations"></a>Define relations

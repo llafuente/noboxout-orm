@@ -12,7 +12,7 @@ function run_tests(test, norm, con) {
         p.name = "king";
 
         t.ok(p.id === null, "pk is null before save");
-        p.$store(function () {
+        p.$store().exec(con, function () {
             t.ok(p.id !== null, "pk is not null after saving");
             t.end();
         });
@@ -25,7 +25,7 @@ function run_tests(test, norm, con) {
         admin.email = "admin@admin.com";
 
         t.ok(admin.id === null, "pk is null before save");
-        admin.$store(function () {
+        admin.$store().exec(con, function () {
             t.ok(admin.$pk() !== null, "pk is not null after saving");
             t.end();
         });
@@ -44,7 +44,7 @@ function run_tests(test, norm, con) {
             t.ok(tag.name === "king", "tag has id");
 
             admin2.main_tag = tag;
-            admin2.$store(function () {
+            admin2.$store().exec(con, function () {
                 t.ok(admin2.id !== null, "user is saved");
                 t.ok(admin2.main_tag.tag_id !== null, "tag_id is not null -> saved");
 
@@ -69,7 +69,7 @@ function run_tests(test, norm, con) {
 
         admin.main_tag = tag;
 
-        admin.$store(function () {
+        admin.$store().exec(con, function () {
             t.ok(admin.id !== null, "user is saved");
             t.ok(admin.main_tag.tag_id !== null, "tag_id is not null -> saved");
             t.ok(tag.tag_id !== null, "tag_id is not null -> saved");

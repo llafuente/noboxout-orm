@@ -11,7 +11,7 @@ function run_tests(test, norm, con) {
         p.start_date = new Date();
 
         t.ok(p.id === null, "pk is null before save");
-        p.$store(function () {
+        p.$store().exec(con, function () {
             t.ok(p.id !== null, "pk is not null after saving");
             t.end();
         });
@@ -36,7 +36,7 @@ function run_tests(test, norm, con) {
             admin.session = session;
 
             t.ok(admin.id === null, "pk is null before save");
-            admin.$store(function () {
+            admin.$store().exec(con, function () {
                 t.ok(admin.$pk() !== null, "pk is not null after saving");
                 t.end();
             });
@@ -78,7 +78,7 @@ function run_tests(test, norm, con) {
     test("get session side", function (t) {
         Models.User.$get(1).exec(con, function (err, user) {
             user.login = "edited";
-            user.$store(function () {
+            user.$store().exec(con, function () {
                 t.end();
             });
         });
@@ -101,17 +101,17 @@ function run_tests(test, norm, con) {
         var admin = Models.User.$create(con);
         admin.login = "admin";
         admin.email = "admin@admin.com";
-        admin.$store(next);
+        admin.$store().exec(con, next);
 
         admin = Models.User.$create(con);
         admin.login = "pepe";
         admin.email = "pepe@admin.com";
-        admin.$store(next);
+        admin.$store().exec(con, next);
 
         admin = Models.User.$create(con);
         admin.login = "dadmin";
         admin.email = "dadmin@admin.com";
-        admin.$store(next);
+        admin.$store().exec(con, next);
     });
     test("querys", function (t) {
 

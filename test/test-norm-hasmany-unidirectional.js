@@ -6,13 +6,13 @@ function run_tests(test, norm, con) {
     Models = require("./test-models.js")(test, con);
 
     test("create user", function (t) {
-        var user = Models.User.$create(con); // use con in constructor
+        var user = Models.User.$create();
 
         user.login = "Science Master";
         user.email = "science@university.com";
 
         t.ok(user.id === null, "pk is null before save");
-        user.$store(function () {
+        user.$store().exec(con, function () {
             t.ok(user.$pk() !== null, "pk is not null after saving");
             t.end();
         });
@@ -24,19 +24,19 @@ function run_tests(test, norm, con) {
         user.email = "math@university.com";
 
         t.ok(user.id === null, "pk is null before save");
-        user.$store(con, function () { // use con when saving
+        user.$store().exec(con, function () { // use con when saving
             t.ok(user.$pk() !== null, "pk is not null after saving");
             t.end();
         });
     });
 
     test("create user", function (t) {
-        var user = Models.User.$create(con);
+        var user = Models.User.$create();
         user.login = "Student";
         user.email = "student@university.com";
 
         t.ok(user.id === null, "pk is null before save");
-        user.$store(function () {
+        user.$store().exec(con, function () {
             t.ok(user.$pk() !== null, "pk is not null after saving");
             t.end();
         });
@@ -60,7 +60,7 @@ function run_tests(test, norm, con) {
                     user.addMentors(math);
                     user.addMentors(science);
 
-                    user.$store(function () {
+                    user.$store().exec(con, function () {
                         t.equal(user.mentors.length, 2, "has two mentors");
                         Models.User.$get(3, {eager: true}).exec(con, function (err, student) {
                             t.equal(user.mentors.length, student.mentors.length, "has two mentors");
@@ -95,8 +95,8 @@ function run_tests(test, norm, con) {
                     });
                 }, 2);
 
-                removed_mentor.$store(check_removed);
-                student.$store(check_removed);
+                removed_mentor.$store().exec(con, check_removed);
+                student.$store().exec(con, check_removed);
             });
         });
     }

@@ -11,7 +11,7 @@ function run_tests(test, norm, con) {
         tag_user_id;
 
     test("fixtures", function (t) {
-        norm.logLevel = 5;
+        norm.logLevel = 6;
 
         var work = new Work(),
             admin_tag,

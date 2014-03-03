@@ -2,6 +2,7 @@ function run_tests(test, norm, con) {
     "use strict";
     var Fun = require("function-enhancements"),
         array = require("array-enhancements"),
+        Work = require("../index.js").Work,
         A,
         B,
         entities;
@@ -48,20 +49,22 @@ function run_tests(test, norm, con) {
     });
 
     test("fixtures", function (t) {
-        var end_test = Fun.after(function () {
-                t.end();
-            }, 9);
+        var work = new Work();
 
         [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function (i) {
             var a = A.$create();
             a.a_name = "A-test-" + i;
-            a.$store(con, end_test);
+            a.$store({}, work);
         });
 
         [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function (i) {
             var b = B.$create();
             b.b_name = "B-test-" + i;
-            b.$store(con, end_test);
+            b.$store({}, work);
+        });
+
+        work.exec(con, function () {
+            t.end();
         });
 
     });
@@ -74,7 +77,7 @@ function run_tests(test, norm, con) {
                     a.addGo(b1);
                     a.addGo(b2);
 
-                    a.$store(con, function () {
+                    a.$store().exec(con, function () {
                         t.equal(b1.ta_id, 1, "tb_id is set");
                         t.equal(b1.$db.ta_id, 1, "tb_id is set");
 
@@ -118,7 +121,7 @@ function run_tests(test, norm, con) {
         A.$get(1, {eager: true}).exec(con, function (err, entity) {
             var b = entity.go[1];
             entity.removeGo(entity.go[1]);
-            b.$store(con, function () {
+            b.$store().exec(con, function () {
                 t.end();
             });
 

@@ -2,6 +2,7 @@ function run_tests(test, norm, con) {
     "use strict";
     var Fun = require("function-enhancements"),
         array = require("array-enhancements"),
+        Work = require("../index.js").Work,
         A,
         B,
         entities;
@@ -44,20 +45,22 @@ function run_tests(test, norm, con) {
     });
 
     test("fixtures", function (t) {
-        var end_test = Fun.after(function () {
-                t.end();
-            }, 9);
+        var work = new Work();
 
         [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function (i) {
             var a = A.$create();
             a.a_name = "A-test-" + i;
-            a.$store(con, end_test);
+            a.$store({}, work);
         });
 
         [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function (i) {
             var b = B.$create();
             b.b_name = "B-test-" + i;
-            b.$store(con, end_test);
+            b.$store({}, work);
+        });
+
+        work.exec(con, function () {
+            t.end();
         });
 
     });
@@ -68,7 +71,7 @@ function run_tests(test, norm, con) {
             B.$get(1).exec(con, function (err, bbb) {
 
                 aaa.go = bbb;
-                aaa.$store(con, function () {
+                aaa.$store().exec(con, function () {
                     console.log(aaa);
                     t.equal(aaa.tb_id, 1, "tb_id is set");
                     t.equal(aaa.$db.tb_id, 1, "tb_id is set");
@@ -102,7 +105,7 @@ function run_tests(test, norm, con) {
     test("simple remove", function (t) {
         A.$get(1).exec(con, function (err, aaa) {
             aaa.go = false; // false it's used in case of eager:false
-            aaa.$store(con, function () {
+            aaa.$store().exec(con, function () {
                 t.end();
             });
 
@@ -123,7 +126,7 @@ function run_tests(test, norm, con) {
             B.$get(1).exec(con, function (err, bbb) {
 
                 aaa.go = bbb;
-                aaa.$store(con, function () {
+                aaa.$store().exec(con, function () {
                     t.end();
                 });
             });
@@ -136,7 +139,7 @@ function run_tests(test, norm, con) {
             B.$get(2).exec(con, function (err, bbb) {
 
                 aaa.go = bbb;
-                aaa.$store(con, function () {
+                aaa.$store().exec(con, function () {
                     t.end();
                 });
             });
@@ -155,10 +158,10 @@ function run_tests(test, norm, con) {
                 B.$get(1).exec(con, function(err, bbb) {
 
                     aaa1.go = bbb;
-                    aaa1.$store(con, end_test);
+                    aaa1.$store().exec(con, end_test);
 
                     aaa2.go = bbb;
-                    aaa2.$store(con, end_test);
+                    aaa2.$store().exec(con, end_test);
                 });
             });
         });
