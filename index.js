@@ -14,5 +14,6 @@
     module.exports.Work = require("./lib/work.js");
     module.exports.Entity = require("./lib/entity.js");
     module.exports.Query = require("./lib/query.js");
+    module.exports.Util = require("./lib/util.js");
 
 }());
