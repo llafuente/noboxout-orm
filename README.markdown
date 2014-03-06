@@ -396,6 +396,11 @@ Adjust verbosity
     require("noboxout-orm").Norm.logLevel = 0; // no verbose, debug, warn, error
 ```
 
+To see bigger traces use:
+```js
+    require("noboxout-orm").Norm.logTrace = Number; // 3-4 should be enough to see your code
+```
+
 
 ## Install
 
