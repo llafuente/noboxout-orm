@@ -43,10 +43,12 @@ function run_tests(test, norm, con) {
     });
 
     test("mentors type is array", function (t) {
-
         Models.User.$get(3).exec(con, function (err, user) {
             t.deepEqual(user.mentors, [], "mentors is an array");
-            t.end();
+            console.log("***********************************");
+            user.$store().exec(con, function (err, user) {
+                t.end();
+            });
         });
     });
 
