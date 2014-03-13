@@ -10,8 +10,8 @@ function run_tests(test, norm, con) {
     Models = require("./test-models.js")(test, con);
 
     test("create user", function (t) {
-        norm.logLevel = 5;
-        
+        norm.logLevel = 3;
+
         var user1 = Models.User.$create(),
             user2 = Models.User.$create(),
             user3 = Models.User.$create(),
@@ -48,6 +48,8 @@ function run_tests(test, norm, con) {
 
     test("retrieve user1", function (t) {
         stats = object.clone(con.stats);
+
+        norm.logLevel = 3;
 
         Models.User.$get(1, {eager: false}).exec(con, function (err, user) {
             t.equal(con.stats.query, stats.query + 1);

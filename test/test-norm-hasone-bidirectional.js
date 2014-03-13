@@ -19,7 +19,6 @@ function run_tests(test, norm, con) {
     });
 
     test("get session", function (t) {
-
         Models.Session.$get(1).exec(con, function (err, session) {
             t.ok(session.id !== null, "session id ok");
             t.ok(session.owner === null, "has no owner");
