@@ -377,6 +377,27 @@ User.hasMany(User, {property: "mentors", foreignKey: "mentor_id", refProperty: "
 
 ```
 
+## Util
+
+* Util.listFetch(Array[Entity], Object|Array fetch_options, callback): null
+
+  Do a $fetch for every item in the list, wait responses and call callback.
+
+* Util.getEntity(Entity entity, Number pk_val, Connection con, fetch_options, callback): null
+
+  Get an entity from Primary key, then fetch, then call callback.
+
+  Remember that eager is useful, but it's not cached while fetch is cached in most cases.
+
+* Util.delCache(key): Function
+
+  Return a function that delete from cache given key.
+
+  Preferred usage with Work
+
+```js
+  work.push(Util.delCache("my-key"))
+```
 
 ## Log
 
