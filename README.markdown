@@ -389,6 +389,10 @@ User.hasMany(User, {property: "mentors", foreignKey: "mentor_id", refProperty: "
 
   Remember that eager is useful, but it's not cached while fetch is cached in most cases.
 
+* Util.cachekey(key, value)
+
+  Create a valid cachekey given any DB-compatible, useful for Binary/Buffer values
+
 * Util.delCache(key): Function
 
   Return a function that delete from cache given key.
