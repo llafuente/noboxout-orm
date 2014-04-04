@@ -10,8 +10,9 @@ function run_tests(test, norm, con) {
     var user_id,
         tag_user_id;
 
+    norm.logLevel = 5;
+
     test("fixtures", function (t) {
-        norm.logLevel = 6;
 
         var work = new Work(),
             admin_tag,
@@ -109,7 +110,6 @@ function run_tests(test, norm, con) {
 
     test("main_tag removed & re-added", function (t) {
         Models.User.$get(user_id, {eager: true}).exec(con, function (err, user) {
-            console.log(user);
             t.ok(user.main_tag == null, "main_tag removed");
             Models.Tag.$get(tag_user_id, {eager: false}).exec(con, function (err, tag) {
                 user.main_tag = tag;

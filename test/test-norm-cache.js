@@ -9,8 +9,9 @@ function run_tests(test, norm, con) {
 
     Models = require("./test-models.js")(test, con);
 
+    norm.logLevel = 5;
+
     test("create user", function (t) {
-        norm.logLevel = 3;
 
         var user1 = Models.User.$create(),
             user2 = Models.User.$create(),
@@ -49,25 +50,24 @@ function run_tests(test, norm, con) {
     test("retrieve user1", function (t) {
         stats = object.clone(con.stats);
 
-        norm.logLevel = 3;
-
         Models.User.$get(1, {eager: false}).exec(con, function (err, user) {
             t.equal(con.stats.query, stats.query + 1);
-            t.equal(con.stats.cachehit, stats.cachehit);
-            t.equal(con.stats.cachemiss, stats.cachemiss + 1);
+            t.equal(con.cache.stats.cachehit, stats.cachehit);
+            t.equal(con.cache.stats.cachemiss, stats.cachemiss + 1);
 
-            console.log(user);
             t.ok(user.id !== null);
             t.end();
         });
     });
-// echo -e "set xUser:1 xxx\nquit" | nc localhost 11211;
-// echo -e "get xUser:1\nquit" | nc localhost 11211;
+
+    // echo -e "set xUser:1 xxx\nquit" | nc localhost 11211;
+    // echo -e "get xUser:1\nquit" | nc localhost 11211;
+
     test("retrieve again user1", function (t) {
         Models.User.$get(1, {eager: false}).exec(con, function (err, user) {
             t.equal(con.stats.query, stats.query + 1);
-            t.equal(con.stats.cachehit, stats.cachehit + 1);
-            t.equal(con.stats.cachemiss, stats.cachemiss + 1);
+            t.equal(con.cache.stats.cachehit, stats.cachehit + 1);
+            t.equal(con.cache.stats.cachemiss, stats.cachemiss + 1);
 
             console.log(user);
             t.ok(user.id !== null);

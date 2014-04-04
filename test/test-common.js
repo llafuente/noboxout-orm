@@ -8,13 +8,13 @@ module.exports = function (run_tests) {
         test = tap.test;
 
     norm.setup({
-        mysql: {
+        database: {
             host     : "127.0.0.1",
             user     : "travis",
             password : "",
             database: "norm_test"
         },
-        memcached: {
+        cache: {
             host: "127.0.0.1",
             port: 11211,
             config: {
