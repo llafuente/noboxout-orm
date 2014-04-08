@@ -17,24 +17,45 @@ function run_tests(test, norm, con) {
         tableName: "user"
     });
 
+    User.$unique(["name"], "uq_user_name");
+
+    norm.registerError('ER_BAD_NULL_ERROR', [ 'us_name' ], "invalid user name");
+    norm.registerError('ER_DUP_ENTRY', [ null, 'uq_user_name' ], "user name is use");
+
     test("check connection listeners", function (t) {
-        t.equal(con.database.listeners("error").length, 2);
+        t.equal(con.database.connection.listeners("error").length, 2);
         t.end();
     });
+
     test("delete/create tables", function (t) {
         norm.sync(function () {
             t.end();
         });
     });
 
-    test("fixtures", function (t) {
+    test("null test", function (t) {
+        var work = User.$create().$store();
+        work.exec(con, function(err, res) {
 
-        User.$create().$store().exec(con, function(err, res) {
-            console.log(err, res);
+            t.equals(err[0].message, "invalid user name");
 
             t.end();
         });
+    });
 
+    test("unique test", function (t) {
+        User.$create().$merge({
+            name: "test-001"
+        }).$store().exec(con, function(err, res) {
+
+            User.$create().$merge({
+                name: "test-001"
+            }).$store().exec(con, function(err, res) {
+                t.equals(err[0].message, "user in use");
+            });
+
+            t.end();
+        });
     });
 
 

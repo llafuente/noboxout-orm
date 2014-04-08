@@ -4,7 +4,10 @@ function run_tests(test, norm, con) {
         Fun = require("function-enhancements"),
         object = require("object-enhancements"),
         Work = require("../index.js").Work,
-        stats;
+        stats = {
+            database: null,
+            cache: null
+        };
 
 
     Models = require("./test-models.js")(test, con);
@@ -48,14 +51,17 @@ function run_tests(test, norm, con) {
     });
 
     test("retrieve user1", function (t) {
-        stats = object.clone(con.stats);
+        stats.database = object.clone(con.database.stats);
+        stats.cache = object.clone(con.cache.stats);
+
 
         Models.User.$get(1, {eager: false}).exec(con, function (err, user) {
-            t.equal(con.stats.query, stats.query + 1);
-            t.equal(con.cache.stats.cachehit, stats.cachehit);
-            t.equal(con.cache.stats.cachemiss, stats.cachemiss + 1);
 
-            t.ok(user.id !== null);
+            t.equal(con.database.stats.querys, stats.database.querys + 1, "querys");
+            t.equal(con.cache.stats.cachehit, stats.cache.cachehit, "cachehit");
+            t.equal(con.cache.stats.cachemiss, stats.cache.cachemiss + 1, "cachemiss");
+
+            t.ok(user.id !== null, "user is not null");
             t.end();
         });
     });
@@ -65,12 +71,11 @@ function run_tests(test, norm, con) {
 
     test("retrieve again user1", function (t) {
         Models.User.$get(1, {eager: false}).exec(con, function (err, user) {
-            t.equal(con.stats.query, stats.query + 1);
-            t.equal(con.cache.stats.cachehit, stats.cachehit + 1);
-            t.equal(con.cache.stats.cachemiss, stats.cachemiss + 1);
+            t.equal(con.database.stats.querys, stats.database.querys + 1, "querys");
+            t.equal(con.cache.stats.cachehit, stats.cache.cachehit + 1, "cachehit");
+            t.equal(con.cache.stats.cachemiss, stats.cache.cachemiss + 1, "cachemiss");
 
-            console.log(user);
-            t.ok(user.id !== null);
+            t.ok(user.id !== null, "user is not null");
             t.end();
         });
     });
